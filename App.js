@@ -25,7 +25,7 @@ export default function App() {
   } else {
     return (
       <NavigationContainer>
-        <StatusBar style="auto" />
+        <StatusBar style='auto'/>
         <UserContext.Provider value={{user,setUser}}>
           <Stack.Navigator screenOptions={{headerShown : false,}}>
           
