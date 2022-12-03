@@ -1,6 +1,6 @@
 import React from 'react';
 import { useContext, useEffect } from "react";
-import { View, Text, Image, TextInput, Button, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, Image, TextInput, Button, StyleSheet, TouchableOpacity, FlatList } from 'react-native';
 import { UserContext } from "../context";
 import { auth } from '../firebase';
 import { Guest } from "../objects/Guest";
@@ -64,6 +64,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'flex-start',
         width: '100%',
+        backgroundColor: '#F6FFFB',
     },
     content: {
         marginTop: 150,

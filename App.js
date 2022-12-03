@@ -18,7 +18,7 @@ export default function App() {
   return (
     <NavigationContainer>
       <UserContext.Provider value={{user,setUser}}>
-        <Stack.Navigator screenOptions={{headerShown : true,}}>
+        <Stack.Navigator screenOptions={{headerShown : false,}}>
          
           <Stack.Screen name="Home" component={Home} />
 
