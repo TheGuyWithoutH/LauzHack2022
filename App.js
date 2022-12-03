@@ -9,6 +9,7 @@ import Home from './screens/Home';
 
 import LoginMenu from './screens/LoginMenu';
 import SignUp from './screens/SignUp';
+import AddItem from './screens/AddItem';
 
 export default function App() {
 
@@ -18,7 +19,7 @@ export default function App() {
   return (
     <NavigationContainer>
       <UserContext.Provider value={{user,setUser}}>
-        <Stack.Navigator screenOptions={{headerShown : true,}}>
+        <Stack.Navigator screenOptions={{headerShown : false,}}>
          
           <Stack.Screen name="Home" component={Home} />
 
@@ -26,6 +27,8 @@ export default function App() {
                 title: 'Sign Up or Login'}} name="LoginMenu" component={LoginMenu}/>
 
           <Stack.Screen name="SignUp" component={SignUp} options={{presentation:"modal",headerShown : true,}}/>
+
+          <Stack.Screen name="AddItem" component={AddItem} options={{headerShown : true,}}/>
        
         </Stack.Navigator>
       </UserContext.Provider>

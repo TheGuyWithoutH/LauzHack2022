@@ -1,6 +1,6 @@
 import React from 'react';
 import { useContext, useEffect } from "react";
-import { View, Text, Image, TextInput, Button, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, Image, TextInput, Button, StyleSheet, TouchableOpacity, SafeAreaView } from 'react-native';
 import { UserContext } from "../context";
 import { auth } from '../firebase';
 import { Guest } from "../objects/Guest";
@@ -31,7 +31,7 @@ const Home = ({navigation}) => {
     }, [])
     
     return (
-        <View style={styles.home}>
+        <SafeAreaView style={styles.home}>
             <View style={styles.header}>
                 <Image style={styles.logo} source={logo} />
                 <Image source={illustration} />
@@ -44,8 +44,8 @@ const Home = ({navigation}) => {
                     </TouchableOpacity>
                 </View>
             </View>
-            
-        </View>
+            <Text onPress={() => navigation.navigate("AddItem")}>Add a item</Text>
+        </SafeAreaView>
     );
 };
 
