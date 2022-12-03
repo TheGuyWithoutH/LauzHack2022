@@ -5,15 +5,31 @@ import { useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { UserContext } from './context';
 import { Guest } from './objects/Guest';
-import { Profile } from './screens/Profile';
-import { Home } from './screens/Home';
+import Home from './screens/Home';
+
+import LoginMenu from './screens/LoginMenu';
+import SignUp from './screens/SignUp';
+
 export default function App() {
 
-  // const [user, setUser] = useState(new Guest())
+  const [user, setUser] = useState(new Guest())
   const Stack = createNativeStackNavigator();
 
   return (
-    <Profile/>
+    <NavigationContainer>
+      <UserContext.Provider value={{user,setUser}}>
+        <Stack.Navigator screenOptions={{headerShown : true,}}>
+         
+          <Stack.Screen name="Home" component={Home} />
+
+          <Stack.Screen options={{ animation:"slide_from_bottom", presentation:"modal",headerShown : true, 
+                title: 'Sign Up or Login'}} name="LoginMenu" component={LoginMenu}/>
+
+          <Stack.Screen name="SignUp" component={SignUp} options={{presentation:"modal",headerShown : true,}}/>
+       
+        </Stack.Navigator>
+      </UserContext.Provider>
+    </NavigationContainer>
   );
 }
 
