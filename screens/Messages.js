@@ -1,21 +1,20 @@
 import React from 'react';
-import { StyleSheet, Text, View, SafeAreaView, FlatList } from 'react-native';
+import { View, Text, Image, TextInput, Button, StyleSheet, TouchableOpacity, FlatList } from 'react-native';
 import Header from '../components/Header';
 
-const Favorites = () => {
+const Messages = () => {
     return (
-        <View style={styles.favorites}>
-            <Header header={"Favorites"} />
+        <View style={styles.messages}>
+            <Header header={"Messages"} />
             <View style={styles.content}>
                 <FlatList></FlatList>
             </View>
         </View>
-
     );
 };
 
 const styles = StyleSheet.create({
-    favorites: {
+    messages: {
         flex: 1,
         alignItems: 'center',
         justifyContent: 'flex-start',
@@ -29,4 +28,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default Favorites;
+export default Messages;
