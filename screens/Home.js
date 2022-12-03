@@ -1,9 +1,33 @@
 import React from 'react';
-import { View, Text, Image, TextInput, Button, StyleSheet, TouchableOpacity, FlatList } from 'react-native';
+import { useContext, useEffect } from "react";
+import { View, Text, Image, TextInput, Button, StyleSheet, TouchableOpacity } from 'react-native';
+import { UserContext } from "../context";
+import { auth } from '../firebase';
+import { Guest } from "../objects/Guest";
+import { User } from "../objects/User";
 import { Fontisto } from '@expo/vector-icons'; 
 import Header from '../components/Header';
 
-const Home = () => {
+const Home = ({navigation}) => {
+    const {user,setUser} = useContext(UserContext)
+
+    useEffect(() => {
+        console.log("Home")
+        const unsuscribe = auth.onAuthStateChanged(u => {
+            if (u) { 
+                console.log("User is already logged in")
+                setUser(new User(u.uid, u)); 
+            } 
+            else {
+                console.log("User is not logged in")
+                setUser(new Guest())
+                navigation.navigate('LoginMenu');
+                // navigation.navigate("LoginMenu")
+            }
+            unsuscribe()
+        })
+    }, [])
+    
     return (
         <View style={styles.home}>
             <Header logo={true} />
