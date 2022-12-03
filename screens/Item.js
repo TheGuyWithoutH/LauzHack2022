@@ -121,10 +121,9 @@ const styles = StyleSheet.create({
     //borderWidth : 1,
   },
   heartContainer: {
-   
     //borderWidth : 1,
-    borderColor : "#FF0000",
-    paddingRight : 50,
+    borderColor: "#FF0000",
+    paddingRight: 50,
     zIndex: 1,
   },
   heart: {
@@ -153,37 +152,37 @@ const styles = StyleSheet.create({
   },
 });
 
-
-
-
 export default function Item({
   navigation,
-  image,
-  name,
-  description,
-  nextAvailabitity,
-  id,
-  user,
-  price,
+  route: {
+    params: {
+      item: { image, name, description, nextAvailabitity, id, user, price },
+    },
+  },
 }) {
-    const [isFav, setIsFav] = useState(false);
-    
+  const [isFav, setIsFav] = useState(false);
+
   return (
     <View style={styles.container}>
       <StatusBar hidden={true} />
       <View style={styles.actionContainer}>
-      <TouchableOpacity style={styles.arrowBackContainer} onPress={() => navigation.goBack()}>
+        <TouchableOpacity
+          style={styles.arrowBackContainer}
+          onPress={() => navigation.goBack()}
+        >
           <AntDesign style={styles.arrowBack} name="arrowleft" size={32} />
         </TouchableOpacity>
-        <TouchableOpacity style={styles.heartContainer} onPress={(e) => {
+        <TouchableOpacity
+          style={styles.heartContainer}
+          onPress={(e) => {
             isFav ? setIsFav(false) : setIsFav(true);
-            
-        }}>
+          }}
+        >
           <AntDesign
             style={styles.heart}
             name="heart"
             id="HeartInner"
-            color={isFav? "#4BAD80" : "#FFFFFF"}
+            color={isFav ? "#4BAD80" : "#FFFFFF"}
             size={40}
           />
           <AntDesign
