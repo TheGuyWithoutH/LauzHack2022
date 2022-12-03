@@ -42,6 +42,7 @@ export class Guest extends AbstractUser{
                                 firstName: userObject.firstName,
                                 lastName: userObject.lastName,
                                 myPosts: [],
+                                myFavoritesIds : [],//array de items
                             })
                     })
                     // .then(() => {
