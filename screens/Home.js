@@ -7,6 +7,7 @@ import { Guest } from "../objects/Guest";
 import { User } from "../objects/User";
 import { Fontisto } from '@expo/vector-icons'; 
 import Header from '../components/Header';
+import ItemCard from '../components/ItemCard';
 
 const Home = ({navigation}) => {
     const {user,setUser} = useContext(UserContext)
@@ -85,12 +86,20 @@ const styles = StyleSheet.create({
         paddingHorizontal: 20,
     },
     buttonSearch: {
+        elevation: 10,
         flex: 1,
         backgroundColor: '#FF6E6C',
         borderRadius: 10,
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
+        shadowColor: '#FF6E6C',
+        shadowOffset: {
+           width: 4,
+           height: 4
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 10,
     },
     searchFilters: {
         display: 'flex',
