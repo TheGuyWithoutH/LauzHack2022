@@ -16,7 +16,7 @@ const Header = ({logo, header}) => {
         return (
             <View style={styles.header}>
                 <Text style={styles.headerText}>{header}</Text>
-                <Image source={illustration} />
+                <Image style={styles.illustration} source={illustration} />
             </View>
         );
     }
@@ -45,11 +45,14 @@ const styles = StyleSheet.create({
         position: 'absolute',
         top: 0,
         left: 0,
-        marginLeft: 30,
-        marginTop: 120,
+        marginLeft: 60,
+        marginTop: 100,
         fontSize: 32,
         color: '#4BAD80',
         fontWeight: 'bold',
+    },
+    illustration: {
+        zIndex: -1,
     }
 
 });
