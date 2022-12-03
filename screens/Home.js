@@ -1,14 +1,12 @@
 import React from 'react';
 import { useContext, useEffect } from "react";
-import { View, Text, Image, TextInput, Button, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, Image, TextInput, Button, StyleSheet, TouchableOpacity, FlatList } from 'react-native';
 import { UserContext } from "../context";
 import { auth } from '../firebase';
 import { Guest } from "../objects/Guest";
 import { User } from "../objects/User";
 import { Fontisto } from '@expo/vector-icons'; 
-
-import logo from '../assets/Images/Logologo.png';
-import illustration from '../assets/Images/shake-hands.png';
+import Header from '../components/Header';
 
 const Home = ({navigation}) => {
     const {user,setUser} = useContext(UserContext)
@@ -32,17 +30,28 @@ const Home = ({navigation}) => {
     
     return (
         <View style={styles.home}>
-            <View style={styles.header}>
-                <Image style={styles.logo} source={logo} />
-                <Image source={illustration} />
-            </View>
+            <Header logo={true} />
             <View style={styles.content}>
                 <View style={styles.searchDiv}>
-                    <TextInput style={styles.textSearch} source={logo}>Search an object</TextInput>
+                    <TextInput style={styles.textSearch}>Search an object</TextInput>
                     <TouchableOpacity style={styles.buttonSearch}>
                         <Fontisto name="search" size={24} color="white" />
                     </TouchableOpacity>
                 </View>
+                <View style={styles.searchFilters}>
+                    <TouchableOpacity style={styles.filter}>
+                        <Text>Essentials</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.filter}>
+                        <Text>Available now</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.filter}>
+                        <Text>Filters</Text>
+                    </TouchableOpacity>
+                </View>
+                <FlatList>
+
+                </FlatList>
             </View>
             
         </View>
@@ -52,24 +61,10 @@ const Home = ({navigation}) => {
 const styles = StyleSheet.create({
     home: {
         flex: 1,
-        backgroundColor: '#F6FFFB',
         alignItems: 'center',
         justifyContent: 'flex-start',
         width: '100%',
-    },
-    header: {
-        position: 'absolute',
-        top: 0,
-        width: '100%',
-        display: 'flex',
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-    },
-    logo: {
-        width: 60,
-        height: 60,
-        objectFit: 'cover',
-        margin: 40,
+        backgroundColor: '#F6FFFB',
     },
     content: {
         marginTop: 150,
@@ -96,6 +91,22 @@ const styles = StyleSheet.create({
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
+    },
+    searchFilters: {
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+        height: 30,    
+        marginTop: 20,
+    },
+    filter: {
+        marginEnd: 10,
+        backgroundColor: '#EEEBEB',
+        alignItems: 'center',
+        justifyContent: 'center',
+        paddingHorizontal: 10,
+        fontSize: 12,
+        borderRadius: 5,
     }
 
   });
