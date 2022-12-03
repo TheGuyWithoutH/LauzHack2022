@@ -1,4 +1,5 @@
-import { getFirestore } from "firebase/firestore";
+import { collection, getDocs, getFirestore, query, where } from "firebase/firestore";
+import { COLLECTIONS } from "../Constants";
 
 
 
@@ -18,4 +19,9 @@ export class AbstractUser {
         throw new Error('method must be implemented')
     }
 
+    userExistsByEmail(email) {
+        const q = query(collection(this.db,COLLECTIONS.REGULAR_USERS), where("email","==",email))
+        return getDocs(q).then(snapshot => {
+            return snapshot.docs.length != 0} )
+    }
 }
