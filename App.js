@@ -6,7 +6,7 @@ import { StyleSheet, Text, View } from 'react-native';
 import { UserContext } from './context';
 import { Guest } from './objects/Guest';
 import { Profile } from './screens/Profile';
-
+import { Home } from './screens/Home';
 export default function App() {
 
   // const [user, setUser] = useState(new Guest())
