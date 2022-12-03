@@ -42,6 +42,8 @@ export default function App() {
     );
   }
 }
+>>>>>>> master
+}
 
 const styles = StyleSheet.create({
   container: {
