@@ -5,6 +5,7 @@ import Home from './Home';
 import Favorites from './Favorites';
 import Messages from './Messages';
 import Profile from './Profile';
+import AddItem from './AddItem';
 
 import { Ionicons } from '@expo/vector-icons'; 
 import { AntDesign } from '@expo/vector-icons'; 
@@ -37,7 +38,7 @@ const AppTabs = ({navigation}) => {
                 }
              />
             <Tab.Screen name="Add" 
-                component={Messages} 
+                component={AddItem} 
                 options={
                     { tabBarIcon: ({color}) => ( <Ionicons name="add-circle" size={85} style={{width: 85, height: 85, marginBottom: 50}} color={color} /> ) }
                 }
