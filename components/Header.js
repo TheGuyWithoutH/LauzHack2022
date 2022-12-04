@@ -31,6 +31,7 @@ const styles = StyleSheet.create({
         display: 'flex',
         flexDirection: 'row',
         justifyContent: 'flex-end',
+        zIndex: 1,
 
     },
     logo: {
