@@ -10,10 +10,29 @@ const ItemCard = ({
 }) => {
 
   const dateToString = (date) => {
+    if (date == "Disponible") {
+      var today = new Date();
+    var day = today.getDate()
+    var month = today.getMonth() + 1; //Current Month
+    var year = today.getFullYear(); //Current Year 
+    return year + '-' + month + '-' + day
+    }
+    if (typeof date === "string") { 
+      console.log("date",date)
     var day = date.getDate()
     var month = date.getMonth() + 1; //Current Month
     var year = date.getFullYear(); //Current Year
     return year + '-' + month + '-' + day
+    }
+    var today = new Date();
+    var day = today.getDate()
+    var month = today.getMonth() + 1; //Current Month
+    var year = today.getFullYear(); //Current Year 
+    return year + '-' + month + '-' + day
+    // 
+    
+    
+    
   }
 
   return (
