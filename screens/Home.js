@@ -40,7 +40,7 @@ const Home = ({ navigation }) => {
           "Appareil à raclette pour 9 personnes vraiment tres sympa entre amis",
         nextAvailabitity: "Demain",
         id: 20,
-        user: "John Dog",
+        owner: "John Dog",
         price: 100,
       },
   ];
