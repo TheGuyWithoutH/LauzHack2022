@@ -262,7 +262,7 @@ export default function Item({
           />
         </TouchableOpacity>
       </View>
-      <Image source={{uri : image}} style={styles.image} />
+      <Image source={image} style={styles.image} />
       <View style={styles.content}>
         <Text style={styles.name}>{name}</Text>
         <View style={{justifyContent: "center", alignItems: "center", width:'100%', flex: 1, marginBottom: 20}}>

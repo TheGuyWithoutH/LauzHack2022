@@ -62,7 +62,10 @@ const MyItems = ({ navigation,route }) => {
             console.log("Items: ",items)
         
             
-        });
+        }).catch((err) => {
+            console.log("err:",err)
+        }
+        )
     }
 }, []);
     
@@ -89,15 +92,22 @@ const MyItems = ({ navigation,route }) => {
               itemPrice={item.price}
               isMine={true}
               action={() => {
-                navigation.navigate("Item", { item: {item: {
+                console.log("My item: ",item)
+                console.log("uri: ",item.image)
+                console.log("name: ",item.name)
+                console.log("description: ",item.description);
+                console.log("nextAvailability: ",item.nextAvailabitity);
+                console.log("price: ",item.price);
+                console.log("id: ",item.id);
+                navigation.navigate("Item", { item:  {
                       image : item.image,
                       name : item.name,
                       description : item.description,
                       nextAvailability : item.availability,
                       price : item.price,
                       id: item.id,
-                      owner: item.creatorName,
-                    }}, isMine: true });
+                      owner: item.owner,
+                    }, isMine: true });
               }}
             />
           )}

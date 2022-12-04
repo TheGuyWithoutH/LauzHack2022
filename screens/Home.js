@@ -109,7 +109,7 @@ const Home = ({ navigation }) => {
                 
                 <ItemCard itemImage={item.data().information.image[0]} itemName={item.data().information.name} itemAvailability={computeAvailability(item.data().nonAvailability)} itemPrice={item.data().information.price} action={() => {
                     navigation.navigate("Item", {item: {
-                      image : item.data().information.image[0].uri,
+                      image : item.data().information.image[0],
                       name : item.data().information.name,
                       description : item.data().description,
                       availability : item.data().nonAvailability,
