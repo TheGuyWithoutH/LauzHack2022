@@ -3,7 +3,7 @@
 // It takes as parameters the item's image, description, user lending it, the id, and the price.
 // Contains as well a back button on the top left corner to go back to the previous screen.
 //status bar should be hidden
-import React, { useState } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { Text, View, TouchableOpacity, StyleSheet, Image } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { AntDesign } from "@expo/vector-icons";
@@ -121,10 +121,9 @@ const styles = StyleSheet.create({
     //borderWidth : 1,
   },
   heartContainer: {
-   
     //borderWidth : 1,
-    borderColor : "#FF0000",
-    paddingRight : 50,
+    borderColor: "#FF0000",
+    paddingRight: 50,
     zIndex: 1,
   },
   heart: {
@@ -153,37 +152,72 @@ const styles = StyleSheet.create({
   },
 });
 
-
-
-
 export default function Item({
   navigation,
-  image,
-  name,
-  description,
-  nextAvailabitity,
-  id,
-  user,
-  price,
+  route: {
+    params: {
+      item: { image, name, description, nextAvailabitity, id, owner, price },
+    },
+  },
 }) {
-    const [isFav, setIsFav] = useState(false);
-    
+  const { user, setUser } = useContext(UserContext);
+  const [isFav, setIsFav] = useState(false);
+
+  useEffect(
+    () => {
+      if (user.isLoggedIn()) {
+        user.isFavorite(id).then((res) => {
+          //console.log("isFavoooos", res);
+          setIsFav(res)
+        });
+        //console.log("isFavoooos", user.isFavorite(id));
+
+        //setIsFav(user.isFavorite(id));
+      }
+    },
+    //setIsFav(user.isFavorite(id))
+    []
+  );
+
   return (
     <View style={styles.container}>
       <StatusBar hidden={true} />
       <View style={styles.actionContainer}>
-      <TouchableOpacity style={styles.arrowBackContainer} onPress={() => navigation.goBack()}>
+        <TouchableOpacity
+          style={styles.arrowBackContainer}
+          onPress={() => navigation.goBack()}
+        >
           <AntDesign style={styles.arrowBack} name="arrowleft" size={32} />
         </TouchableOpacity>
-        <TouchableOpacity style={styles.heartContainer} onPress={(e) => {
-            isFav ? setIsFav(false) : setIsFav(true);
+        <TouchableOpacity
+          style={styles.heartContainer}
+          onPress={() => {
+            if (!user.isLoggedIn()) {
+              //console.log("not logged in");
+              navigation.navigate("LoginMenu");
+              return;
+            }
+
+            if (isFav === true) {
+              //console.log("removing from fav");
+              user.removeFavorite(id);
+              setIsFav(false);
+
+              //console.log(user.getFavorites());
+            } else {
+              //console.log("adding to fav");
+              user.addFavorite(id);
+              setIsFav(true);
+              //console.log(user.getFavorites());
+            }
             
-        }}>
+          }}
+        >
           <AntDesign
             style={styles.heart}
             name="heart"
             id="HeartInner"
-            color={isFav? "#4BAD80" : "#FFFFFF"}
+            color={isFav ? "#4BAD80" : "#FFFFFF"}
             size={40}
           />
           <AntDesign
@@ -199,7 +233,7 @@ export default function Item({
         <Text style={styles.name}>{name}</Text>
         <View style={styles.inner}>
           <Text style={styles.innerA}>Offered by </Text>
-          <Text style={styles.innerB}>{user}</Text>
+          <Text style={styles.innerB}>{owner}</Text>
         </View>
         <View style={styles.inner}>
           <Text style={styles.innerA}>Available from </Text>
@@ -211,7 +245,11 @@ export default function Item({
           <Text style={styles.price}>{price}.-/day</Text>
           <TouchableOpacity
             style={styles.button}
-            onPress={() => navigation.navigate("Rent", { id: id })}
+            onPress={() => {
+              //console.log("FAV?", isFav);
+
+              navigation.navigate("Rent", { id: id })
+            }}
           >
             <Text style={styles.buttonText}>Rent this object</Text>
           </TouchableOpacity>
