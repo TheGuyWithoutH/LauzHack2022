@@ -151,7 +151,12 @@ export default function AddItem({navigation}){
                                 data={data} 
                                 save="value"
                                 label="Categories"
-                                style={{backgroundColor:"lightgreen"}}
+                                tagBorderColor="#4BAD80"
+                                tagTextColor="#4BAD80"
+                                selectedItemIconColor="#4BAD80"
+                                itemTextColor="#4BAD80"
+                                searchInputStyle={{ color: '#4BAD80' }}
+                                style={{backgroundColor:"lightgreen", }}
                                 search={false}
                             />
                             </View>
@@ -161,7 +166,7 @@ export default function AddItem({navigation}){
                                     <TextInput placeholder="CHF"  style={styles.sectionInput} placeholderTextColor="#4BAD80" keyboardType="numeric" onChangeText={setPrice} value={price}/>
                                 </View>
                                 <TouchableWithoutFeedback onPress={onSubmit}>
-                                    <View style={{backgroundColor:"red",flex:1,alignSelf:"flex-end",padding:10,borderRadius:20}} >
+                                    <View style={{backgroundColor:"#FF6E6C",flex:1,alignSelf:"flex-end",padding:10,borderRadius:20, elevation: 3}} >
                                         <Text style={{textAlign:"center",color:"white",fontSize:20}} >Rent</Text>
                                     </View>
                                 </TouchableWithoutFeedback>
@@ -181,9 +186,10 @@ export default function AddItem({navigation}){
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        marginTop:170,
+        paddingTop:170,
         // alignItems: 'center',
         // justifyContent: 'center',
+        backgroundColor: '#F6FFFB',
     },
 
     section: {

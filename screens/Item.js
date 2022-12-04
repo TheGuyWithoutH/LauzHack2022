@@ -35,6 +35,7 @@ const styles = StyleSheet.create({
     //borderWidth : 1,
     justifyContent: "space-between",
     width: "100%",
+    margin: 0,
     borderColor: "#F000FF",
   },
 
@@ -68,9 +69,16 @@ const styles = StyleSheet.create({
     width: "80%",
     //borderWidth: 1,
     borderColor: "#FF0000",
-    paddingLeft: 0,
-    paddingRight: 0,
-    padding: 10,
+    paddingLeft: 30,
+    paddingRight: 30,
+    paddingTop: 30,
+    paddingBottom: 30,
+    backgroundColor: "#F6FFFB",
+    width: "100%",
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "space-around",
   },
   name: {
     fontSize: 30,
@@ -78,6 +86,9 @@ const styles = StyleSheet.create({
     //borderWidth : 1,
     borderColor: "#F000FF",
     marginBottom: 10,
+    width: "100%",
+    textAlign: "center",
+    flex: 1,
   },
 
   button: {
@@ -102,7 +113,8 @@ const styles = StyleSheet.create({
     fontSize: 16,
     //borderWidth : 1,
     borderColor: "#F000FF",
-    marginBottom: 20,
+    marginVertical: 30,
+    flex: 4
   },
   arrowBackContainer: {
     padding: 7,
@@ -186,6 +198,13 @@ export default function Item({
     []
   );
 
+  const dateToString = (date) => {
+    var day = date.getDate()
+    var month = date.getMonth() + 1; //Current Month
+    var year = date.getFullYear(); //Current Year
+    return year + '-' + month + '-' + day
+}
+
   return (
     <View style={styles.container}>
       <StatusBar hidden={true} />
@@ -246,13 +265,15 @@ export default function Item({
       <Image source={{uri : image}} style={styles.image} />
       <View style={styles.content}>
         <Text style={styles.name}>{name}</Text>
-        <View style={styles.inner}>
-          <Text style={styles.innerA}>Offered by </Text>
-          <Text style={styles.innerB}>{owner}</Text>
-        </View>
-        <View style={styles.inner}>
-          <Text style={styles.innerA}>Available from </Text>
-          <Text style={styles.innerB}>{computeAvailability(availabitity || {}).getDate()}</Text>
+        <View style={{justifyContent: "center", alignItems: "center", width:'100%', flex: 1, marginBottom: 20}}>
+          <View style={styles.inner}>
+            <Text style={styles.innerA}>Offered by </Text>
+            <Text style={styles.innerB}>{owner}</Text>
+          </View>
+          <View style={styles.inner}>
+            <Text style={styles.innerA}>Available from </Text>
+            <Text style={styles.innerB}>{dateToString(computeAvailability(availabitity || {}))}</Text>
+          </View>
         </View>
         <Text style={styles.description}>{description}</Text>
 
