@@ -41,18 +41,24 @@ const Profile = ({ navigation }) => {
           <Image source={require("../assets/profile.png")} style={styles.profilePicture}/>
           <View style={{flex: 1, alignItems: 'center', flexDirection:'column'}}>
             <Text style={styles.name}>{name}</Text>
-            <TouchableOpacity onPress={() => navigation.navigate("Login")}>
-              <Text style={styles.logout}>Logout</Text>
+            <TouchableOpacity onPress={() => {
+                console.log("logout");
+                user.isLoggedIn() ? user.logout() : navigation.navigate("LoginMenu") }}>
+              <Text style={styles.logout}>{(user.isLoggedIn()) ? "Logout" :  "Login" }</Text>
             </TouchableOpacity>
           </View>
         </View>
         <View style={styles.buttonContainer}>
-          <TouchableOpacity
+            
+
+          <TouchableOpacity hidden={!user.isLoggedIn()}
             style={styles.button}
             onPress={() => navigation.navigate("MyItems", {myName: name})}
           >
             <Text style={styles.buttonText}>My Objects</Text>
           </TouchableOpacity>
+        
+        
 
           <TouchableOpacity
             style={styles.button}

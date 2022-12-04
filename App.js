@@ -13,6 +13,7 @@ import LoginMenu from "./screens/LoginMenu";
 import SignUp from "./screens/SignUp";
 import AppTabs from "./screens/AppTabs";
 import Chat from "./screens/Chat";
+import TermsAndConditions from "./screens/TermsAndConditions";
 
 export default function App() {
   const [fontsLoaded] = useFonts({
@@ -61,6 +62,11 @@ export default function App() {
             <Stack.Screen
               name="Chat"
               component={Chat}
+              options={{ presentation: "card", headerShown: false }}
+            />
+            <Stack.Screen
+              name="TermsAndConditions"
+              component={TermsAndConditions}
               options={{ presentation: "card", headerShown: false }}
             />
           </Stack.Navigator>
