@@ -148,11 +148,21 @@ const styles = StyleSheet.create({
   },
 });
 
+const computeAvailability = (items) => {
+  let dates = Object.entries(items).filter((item) => Date.parse(item[0]) >= Date.now()).sort((a, b) => a[0].localeCompare(b[0]));
+  let date = Date.now();
+  while(Date.parse(dates[0]) <= date) {
+    if(date = Date.parse(dates[0])) dates = dates.shift();
+    date = date + 86400000;
+  }
+  return new Date(date);
+}
+
 export default function Item({
   navigation,
   route: {
     params: {
-      item: { image, name, description, nextAvailabitity, id, owner, price, isMine },
+      item: { image, name, description, availabitity, id, owner, price, isMine, ownerId },
     },
   },
 }) {
@@ -179,7 +189,14 @@ export default function Item({
   return (
     <View style={styles.container}>
       <StatusBar hidden={true} />
-      <ValidateRent id={id} visibility={rent} setVisibility={setRent}/>
+      <ValidateRent id={id} 
+        visibility={rent} 
+        setVisibility={setRent} 
+        user={user} 
+        availability={availabitity} 
+        ownerId={ownerId}
+        ownerName={owner}
+        navigation={navigation} />
       <View style={styles.actionContainer}>
         <TouchableOpacity
           style={styles.arrowBackContainer}
@@ -235,7 +252,7 @@ export default function Item({
         </View>
         <View style={styles.inner}>
           <Text style={styles.innerA}>Available from </Text>
-          <Text style={styles.innerB}>{nextAvailabitity}</Text>
+          <Text style={styles.innerB}>{computeAvailability(availabitity || {}).getDate()}</Text>
         </View>
         <Text style={styles.description}>{description}</Text>
 
