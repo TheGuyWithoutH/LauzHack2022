@@ -59,5 +59,11 @@ export class Post {
         }
     }
 
+    
+     uploadPostImages(pictureFile, uid) {
+        let storageRef = ref(getStorage(), COLLECTIONS.profile_picture(uid))
+        return uploadBytes(storageRef, pictureFile)
+    }
+
 
 }
