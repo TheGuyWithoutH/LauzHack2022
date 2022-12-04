@@ -6,12 +6,12 @@ import * as ImagePicker from 'expo-image-picker';
 import { AntDesign } from '@expo/vector-icons';
 import { UserContext } from "../context";
 import { Post } from "../objects/Post";
+import Header from "../components/Header";
+import { useIsFocused } from "@react-navigation/native";
 
 //Create AddItem func
 export default function AddItem({navigation}){
-
-    
-    
+    const isFocused = useIsFocused();
 
     const {user,setUser} = useContext(UserContext)
 
@@ -31,6 +31,16 @@ export default function AddItem({navigation}){
             price: price,
         }
     }
+
+    useEffect(() => {
+        console.log(isFocused);
+        setName("")
+        setDescription("")
+        setCategory([])
+        setImages(null)
+        setAvailability("")
+        setPrice("")
+    }, [isFocused]);
 
 
     const data = [
@@ -83,15 +93,23 @@ export default function AddItem({navigation}){
       );
 
     const onSubmit = () => {
-        var item = toObject(name,category,images,price)
-        var post = new Post(item,availability,description,user.getUID())
-
-        console.log(post.getInformation())
-        user.post(post).then(() => {
-            navigation.navigate("Home")
-        }).catch((error) => {
-            console.log(error)
+        // 
+        // var post = new Post(item,availability,description,user.getUID(),creatorName=user.getName())
+        user.getPersonalInformation().then((data) => {
+            var item = toObject(name,category,images,price)
+            var post = new Post(item,availability,description,user.getUID(),data.firstName+" "+data.lastName)
+            return post
+        }).then((post) => {
+            user.post(post).then(() => {
+                navigation.navigate("Home")
+            }).catch((error) => {
+                console.log(error)
+            })
         })
+        
+
+        // console.log(post.getInformation())
+        
 
     }
 
@@ -101,6 +119,7 @@ export default function AddItem({navigation}){
                 showsVerticalScrollIndicator={false}
                 nestedScrollEnabled={true}
                 keyboardShouldPersistTaps='handled'>
+            <Header header={"Add an item"} />
             <View style={styles.container}>
                         {images ? 
                             <View >
@@ -119,11 +138,11 @@ export default function AddItem({navigation}){
                         <View style={{marginLeft:"auto",marginRight:"auto"}}>
                             <View style={styles.section}>
                                 <Text style={styles.sectionTitle}>Name</Text>
-                                <TextInput placeholder="Name of the article" style={styles.sectionInput} placeholderTextColor="#4BAD80" onChangeText={setName}/>
+                                <TextInput placeholder="Name of the article" style={styles.sectionInput} placeholderTextColor="#4BAD80" onChangeText={setName} value={name}/>
                             </View>
                             <View style={styles.section}>
                                 <Text style={styles.sectionTitle}>Description</Text>
-                                <TextInput placeholder="Describe your article" multiline={true} style={[styles.sectionInput,{height:"auto"}]} placeholderTextColor="#4BAD80" showsVerticalScrollIndicator={false} onChangeText={setDescription}/>
+                                <TextInput placeholder="Describe your article" multiline={true} style={[styles.sectionInput,{height:100}]} placeholderTextColor="#4BAD80" showsVerticalScrollIndicator={false} onChangeText={setDescription} value={description}/>
                             </View>
                             <View style={styles.section}> 
                                 <Text style={styles.sectionTitle}>Category</Text>
@@ -133,16 +152,20 @@ export default function AddItem({navigation}){
                                 save="value"
                                 label="Categories"
                                 style={{backgroundColor:"lightgreen"}}
+                                search={false}
                             />
                             </View>
                             <View style={[styles.section,{flexDirection:"row",marginBottom:50}]}>
                                 <View style={{flex:1,marginRight:10}}>
                                     <Text style={styles.sectionTitle}>Price</Text>
-                                    <TextInput placeholder="CHF"  style={styles.sectionInput} placeholderTextColor="#4BAD80" keyboardType="numeric" onChangeText={setPrice}/>
+                                    <TextInput placeholder="CHF"  style={styles.sectionInput} placeholderTextColor="#4BAD80" keyboardType="numeric" onChangeText={setPrice} value={price}/>
                                 </View>
-                                <View style={{backgroundColor:"red",flex:1,alignSelf:"flex-end",padding:10,borderRadius:20}} >
-                                    <Text style={{textAlign:"center",color:"white",fontSize:20}} onPress={onSubmit}>Rent</Text>
-                                </View>
+                                <TouchableWithoutFeedback onPress={onSubmit}>
+                                    <View style={{backgroundColor:"red",flex:1,alignSelf:"flex-end",padding:10,borderRadius:20}} >
+                                        <Text style={{textAlign:"center",color:"white",fontSize:20}} >Rent</Text>
+                                    </View>
+                                </TouchableWithoutFeedback>
+                                
                                 
                             </View>
                         </View>
@@ -158,7 +181,7 @@ export default function AddItem({navigation}){
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        marginTop:50,
+        marginTop:170,
         // alignItems: 'center',
         // justifyContent: 'center',
     },

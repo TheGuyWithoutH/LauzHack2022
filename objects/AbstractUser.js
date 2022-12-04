@@ -24,4 +24,15 @@ export class AbstractUser {
         return getDocs(q).then(snapshot => {
             return snapshot.docs.length != 0} )
     }
+
+    getPublicPosts(...queryConstraints) {
+        const q = query(collection(this.db, COLLECTIONS.AVAILABLE_OBJECTS), ...queryConstraints)
+
+        return getDocs(q).then(snapshot => {
+                return snapshot.docs
+            })
+    }
+
+
+
 }

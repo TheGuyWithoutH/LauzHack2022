@@ -228,7 +228,7 @@ export default function Item({
           />
         </TouchableOpacity>
       </View>
-      <Image source={image} style={styles.image} />
+      <Image source={{uri : image}} style={styles.image} />
       <View style={styles.content}>
         <Text style={styles.name}>{name}</Text>
         <View style={styles.inner}>

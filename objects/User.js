@@ -10,9 +10,10 @@ import {
   updatePassword,
   updateProfile,
 } from "firebase/auth";
-import { setDoc, getDoc, doc, getFirestore } from "firebase/firestore";
+import { setDoc, getDoc, doc, getFirestore, collection, updateDoc, arrayUnion } from "firebase/firestore";
 import { COLLECTIONS } from "../Constants";
 import { AbstractUser } from "./AbstractUser";
+import { postConverter } from "./Post";
 
 export class User extends AbstractUser {
   #uid;
@@ -162,9 +163,22 @@ export class User extends AbstractUser {
     const postRef = doc(col, post.getId()).withConverter(postConverter)
     console.log("CHECK")
     setDoc(postRef, post)
+    console.log("CHECK2")
     const userRef = doc(getFirestore(), COLLECTIONS.REGULAR_USERS, this.#uid)
     return updateDoc(userRef, {myPosts : arrayUnion(post.asDataObject())}).catch(err => {
         return setDoc(userRef, {myPosts : arrayUnion(post.asDataObject())})
     })
 }
+
+    //delete item from firebase and users posts
+    deletePost(post) {
+        const col = collection(getFirestore(), COLLECTIONS.AVAILABLE_OBJECTS)
+        const postRef = doc(col, post.getId()).withConverter(postConverter)
+        deleteDoc(postRef)
+        const userRef = doc(getFirestore(), COLLECTIONS.REGULAR_USERS, this.#uid)
+        return updateDoc(userRef, {myPosts : arrayRemove(post.asDataObject())}).catch(err => {
+            return setDoc(userRef, {myPosts : arrayRemove(post.asDataObject())})
+        })
+    }
+
 }
