@@ -50,7 +50,7 @@ const Home = ({ navigation }) => {
     let dates = Object.entries(items).filter((item) => Date.parse(item[0]) >= Date.now()).sort((a, b) => a[0].localeCompare(b[0]));
     let date = Date.now();
     while(Date.parse(dates[0]) <= date) {
-      if(date = Date.parse(dates[0])) dates = dates.shift();
+      if(date == Date.parse(dates[0])) dates = dates.shift();
       date = date + 86400000;
     }
     return new Date(date);
@@ -145,7 +145,8 @@ const styles = StyleSheet.create({
   content: {
     marginTop: 150,
     width: "80%",
-    flex:1
+    flex:1,
+    overflow: "hidden",
   },
   searchDiv: {
     display: "flex",
