@@ -4,17 +4,12 @@ import {Calendar} from 'react-native-calendars';
 
 import { Ionicons } from '@expo/vector-icons'; 
 
-const ValidateRent = ({navigation, id, visibility, setVisibility, availability }) => {
+const ValidateRent = ({navigation, id, visibility, setVisibility, availability, user, ownerId, ownerName }) => {
     const [calendarModalVisible, setCalendarModalVisible] = useState(false);
 
     const [dateInterval, setDateInterval] = useState({});
 
-    const [datesTaken, setDatesTaken] = useState({
-            '2022-12-10': 'taken',
-            '2022-12-11': 'taken',
-            '2022-12-12': 'taken',
-            '2022-12-13': 'wanted',
-        });
+    const [datesTaken, setDatesTaken] = useState(availability);
 
     const addDate = (date, datesTaken) => {
         let newDatesTaken = {...datesTaken, [date]: 'wanted'};
@@ -43,8 +38,28 @@ const ValidateRent = ({navigation, id, visibility, setVisibility, availability }
         }
     }
 
+    const dateToString = (date) => {
+        var day = date.getDate()
+        var month = date.getMonth() + 1; //Current Month
+        var year = date.getFullYear(); //Current Year
+        return year + '-' + month + '-' + day
+    }
+
     const submitRent = () => {
-        
+        let newDatesTaken = {... availability}
+        for (let start = Date.parse(dateInterval.startDate); start <= Date.parse(dateInterval.endDate); start+=86400000) {
+            let date = new Date(start);
+            let dateString = dateToString(date);
+            newDatesTaken[dateString] = 'taken';          
+        }   
+
+        console.log(ownerName);
+
+        user.rentItem(id, newDatesTaken).then(() => {
+            user.createChat(id, dateInterval.startDate, dateInterval.endDate).then((idChat) => {
+                navigation.navigate('Chat', {contact: {id: ownerId, name: ownerName}, chatId: idChat});
+            });
+        });
     }
 
     return (
@@ -74,7 +89,7 @@ const ValidateRent = ({navigation, id, visibility, setVisibility, availability }
                                     <Calendar
                                         theme={{calendarBackground:'#F6FFFB' }}
                                         onDayPress={day => {
-                                            if(!datesTaken[day.dateString]) {
+                                            if(!datesTaken || !datesTaken[day.dateString]) {
                                                 addDate(day.dateString, datesTaken);
                                             } else {
                                                 if(datesTaken[day.dateString] != 'taken') {
@@ -88,7 +103,7 @@ const ValidateRent = ({navigation, id, visibility, setVisibility, availability }
                                           }}
                                         style={styles.calendar}
                                         markingType={'period'}
-                                        markedDates={Object.entries(datesTaken).reduce(
+                                        markedDates={datesTaken && Object.entries(datesTaken).reduce(
                                             (obj, item) => {
                                                 if(item[1] === 'taken') {
                                                     return Object.assign(obj, { [item[0]]: {

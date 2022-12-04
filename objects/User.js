@@ -253,4 +253,29 @@ deletePost(post) {
   })
 }
 
+rentItem(post, dates) {
+  const userRef = doc(getFirestore(), COLLECTIONS.AVAILABLE_OBJECTS, post)
+  return updateDoc(userRef, {nonAvailability : dates})
+}
+
+createChat(userId) {
+    const collectionRef = collection(getFirestore(), "chats");
+    const id = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15)
+    const postRef = doc(collectionRef, id)
+    setDoc(postRef, {})
+    const userRef1 = doc(getFirestore(), COLLECTIONS.REGULAR_USERS, this.#uid)
+    const userRef2 = doc(getFirestore(), COLLECTIONS.REGULAR_USERS, userId)
+    return updateDoc(userRef1, {myChats : arrayUnion(id)}).catch(err => {
+      return setDoc(userRef1, {myChats : arrayUnion(id)})
+  }).then(() => {
+    return updateDoc(userRef2, {myChats : arrayUnion(id)}).catch(err => {
+      return setDoc(userRef2, {myChats : arrayUnion(id)})
+    })
+  }).then(() => {
+    return id
+  }).catch(err => {
+    console.log(err)
+  })
+}
+
 }
