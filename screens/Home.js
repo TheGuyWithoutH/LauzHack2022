@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useContext, useEffect } from "react";
 import {
   View,
@@ -18,34 +18,24 @@ import { Fontisto } from "@expo/vector-icons";
 import Header from "../components/Header";
 import ItemCard from "../components/ItemCard";
 import Item from "../screens/Item";
+import { useIsFocused } from "@react-navigation/native";
 
 const Home = ({ navigation }) => {
-  const items = [
-    {
-      id: 1,
-      image: require("../assets/raclette.jpeg"),
-      name: "Appareil Raclette",
-      description:
-        "Appareil à raclette pour 8 personnes vraiment sympa entre amis",
-      nextAvailabitity: "Disponible",
-      id: 1,
-      user: "John Doe",
-      price: 10,
-    },
-    {
-        id: 1,
-        image: require("../assets/raclette.jpeg"),
-        name: "Appareil Raclette mieux",
-        description:
-          "Appareil à raclette pour 9 personnes vraiment tres sympa entre amis",
-        nextAvailabitity: "Demain",
-        id: 20,
-        owner: "John Dog",
-        price: 100,
-      },
-  ];
-
   const { user, setUser } = useContext(UserContext);
+  const [items2, setItems2] = useState([]);
+  const isFocused = useIsFocused();
+
+  const [isEssentials, setIsEssentials] = useState(false);
+
+  useEffect(() => {
+    user.getPublicPosts().then((posts) => {
+      setItems2(posts);
+    })
+
+
+  }, [isFocused]);
+
+  
 
   useEffect(() => {
     console.log("Home");
@@ -84,15 +74,25 @@ const Home = ({ navigation }) => {
             <Text>Filters</Text>
           </TouchableOpacity>
         </View>
+        
         <FlatList
-            data={items}
+            data={items2}
             renderItem={({ item }) => (
                 
-                <ItemCard itemImage={item.image} itemName={item.name} itemAvailability={item.nextAvailabitity} itemPrice={item.price} action={() => {
-                    navigation.navigate("Item", {item: item}) 
+                <ItemCard itemImage={item.data().information.image[0].uri} itemName={item.data().information.name} itemAvailability={item.data().availability} itemPrice={item.data().information.price} action={() => {
+                    navigation.navigate("Item", {item: {
+                      image : item.data().information.image[0].uri,
+                      name : item.data().information.name,
+                      description : item.data().description,
+                      nextAvailability : item.data().availability,
+                      price : item.data().information.price,
+                      id: item.data().id,
+                      owner: item.data().creatorName,
+                    }}) 
                 }
                 }/>
             )}
+            showsVerticalScrollIndicator={false}
         />
       </View>
     </View>
@@ -110,6 +110,7 @@ const styles = StyleSheet.create({
   content: {
     marginTop: 150,
     width: "80%",
+    flex:1
   },
   searchDiv: {
     display: "flex",
@@ -147,6 +148,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-around",
     height: 30,
     marginTop: 20,
+    marginBottom: 10,
   },
   filter: {
     marginEnd: 10,

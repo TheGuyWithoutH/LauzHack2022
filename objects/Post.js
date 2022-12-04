@@ -4,15 +4,16 @@ export const postConverter = {
     toFirestore: (post) => {
         return {
             id: post.getId(),
-            availability: post.getAvailability(),
+            nonAvailability: post.getNonAvailability(),
             information: post.getInformation(),
             description: post.getDescription(),
             creatorUID: post.getCreatorUID(),
+            creatorName: post.getCreatorName(),
         }
     },
     fromFirestore: (snapshot, options) => {
         const data = snapshot.data(options)
-        return new Post(data.information,data.availability,data.id,data.description,data.creatorUID)
+        return new Post(data.information,data.nonAvailability,data.id,data.description,data.creatorUID,data.creatorName)
     }
 }
 export class Post {
@@ -21,14 +22,16 @@ export class Post {
     #id
     #information
     #description
-    #availabitity
+    #nonAvailability
     #creatorUID
+    #creatorName
 
-    constructor(information, availability, description="", creatorUID, id=null) {
+    constructor(information, nonAvailability, description="", creatorUID, creatorName, id=null) {
         this.#information = information
         this.#description = description
-        this.#availabitity = availability
+        this.#nonAvailability = nonAvailability
         this.#creatorUID = creatorUID
+        this.#creatorName = creatorName
 
         this.#id = id ? id : Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15)
 
@@ -37,9 +40,12 @@ export class Post {
     //create getters
     getInformation() { return this.#information }
     getDescription() { return this.#description }
-    getAvailability() { return this.#availabitity }
+    getNonAvailability() { return this.#nonAvailability }
     getCreatorUID() { return this.#creatorUID }
     getId() { return this.#id }
+    getCreatorName() {
+        return this.#creatorName
+    }
 
     //create data object    
     asDataObject() {
@@ -47,8 +53,9 @@ export class Post {
             id: this.#id,
             information: this.#information,
             description: this.#description,
-            availability: this.#availabitity,
-            creatorUID: this.#creatorUID
+            nonAvailability: this.#nonAvailability,
+            creatorUID: this.#creatorUID,
+            creatorName : this.#creatorName
         }
     }
 

@@ -10,11 +10,14 @@ import {
   updatePassword,
   updateProfile,
 } from "firebase/auth";
-import { setDoc, getDoc, doc, getFirestore, collection, updateDoc, arrayUnion } from "firebase/firestore";
 import { COLLECTIONS } from "../Constants";
 import { AbstractUser } from "./AbstractUser";
 import {GiftedChat} from 'react-native-gifted-chat'
 import { postConverter } from "./Post";
+
+import { setDoc, getDoc, doc, getFirestore, collection, updateDoc, arrayUnion, orderBy, query, onSnapshot, addDoc } from "firebase/firestore";
+
+
 
 export class User extends AbstractUser {
   #uid;
@@ -51,18 +54,22 @@ export class User extends AbstractUser {
     return signOut(getAuth());
   }
 
+  getUserInformation(uid) {
+    return getDoc(doc(getFirestore(), COLLECTIONS.REGULAR_USERS, uid)).then(
+      (doc) => {
+          if (doc.exists()) {
+              // get the data as a string        
+              return doc.data();
+          } else {
+          //console.log("No such document!");
+          }
+      }
+      );
+  }
+
   getPersonalInformation() {
     console.log(this.#uid);
-    return getDoc(doc(getFirestore(), COLLECTIONS.REGULAR_USERS, this.#uid)).then(
-        (doc) => {
-            if (doc.exists()) {
-                // get the data as a string        
-                return doc.data();
-            } else {
-            //console.log("No such document!");
-            }
-        }
-        );
+    return this.getUserInformation(this.#uid);
   }
 
   getFavorites() {
@@ -154,60 +161,75 @@ export class User extends AbstractUser {
             console.log("Error getting document remove:", error);
         }
         );
-      }
-        getMessageFromChat(chatId, setMessages) {
-          const collectionRef = collection(getFirestore(), COLLECTIONS.CHATS, chatId);
-          const query = query(collectionRef, orderBy("createdAt", "desc"));
-      
-          const unsubscribe = onSnapshot(query, (querySnapshot) => {
-            setMessages(
-              querySnapshot.docs.map((doc) => ({
-                id: doc.id,
-                createdAt: doc.data().createdAt,
-                text: doc.data().text,
-                user: doc.data().user,
-              }))
-            )
-          })
-          return unsubscribe;
+    }
+
+  getChats() {
+    return getDoc(doc(getFirestore(), COLLECTIONS.REGULAR_USERS, this.#uid)).then(
+        (doc) => {
+            if (doc.exists()) {
+                // get the data as a string
+                var chats = doc.data().myChats;
+                return chats;
+            } else {
+            console.log("No such document!");
+            return []
+            }
         }
-        
+        );
+  }
+
+  getMessageFromChat(chatId, setMessages) {
+    const collectionRef = collection(getFirestore(), COLLECTIONS.USER_CHAT(chatId));
+    const queryPrepare = query(collectionRef, orderBy("createdAt", "desc"));
+
+    const unsubscribe = onSnapshot(queryPrepare, (querySnapshot) => {
+      setMessages(
+        querySnapshot.docs.map((doc) => ({
+          id: doc.data()._id,
+          createdAt: doc.data().createdAt,
+          text: doc.data().text,
+          user: doc.data().user,
+        }))
+      )
+    })
+    return unsubscribe;
+  }
+
   sendMessageToChat(chatId, setMessages, messages) {
     setMessages(previousMessages => GiftedChat.append(previousMessages, messages));
-    const collectionRef = collection(getFirestore(), COLLECTIONS.CHATS, chatId);
+    const collectionRef = collection(getFirestore(), COLLECTIONS.USER_CHAT(chatId));
     const message = messages[0];
 
     addDoc(collectionRef, message);
   }
 
+getMyItems() {
+  return getDoc(doc(getFirestore(), COLLECTIONS.REGULAR_USERS, this.#uid)).then(
+      (docc) => {
+          if (docc.exists()) {
+              // get the data as a string
+              console.log(docc.data().myPosts);
+              return docc.data().myPosts;
+          } else {
+          console.log("No such document!");
+          }
+      }
+      );
+}
 
-  getMyItems() {
-    return getDoc(doc(getFirestore(), COLLECTIONS.REGULAR_USERS, this.#uid)).then(
-        (docc) => {
-            if (docc.exists()) {
-                // get the data as a string
-                console.log(docc.data().myPosts);
-                return docc.data().myPosts;
-            } else {
-            console.log("No such document!");
-            }
-        }
-        );
-  }
-
-  getName() {
-    return getDoc(doc(getFirestore(), COLLECTIONS.REGULAR_USERS, this.#uid)).then(
-        (docc) => {
-            if (docc.exists()) {
-                // get the data as a string
-                console.log(docc.data().firstName+" "+docc.data().lastName);
-                return docc.data().firstName+" "+docc.data().lastName;
-            } else {
-            console.log("No such document!");
-            }
-        }
-        );
-  }
+getName() {
+  return getDoc(doc(getFirestore(), COLLECTIONS.REGULAR_USERS, this.#uid)).then(
+      (docc) => {
+          if (docc.exists()) {
+              // get the data as a string
+              console.log(docc.data().firstName+" "+docc.data().lastName);
+              return docc.data().firstName+" "+docc.data().lastName;
+          } else {
+          console.log("No such document!");
+          }
+      }
+      );
+}
 
 
   post(post) {
@@ -215,9 +237,20 @@ export class User extends AbstractUser {
     const postRef = doc(col, post.getId()).withConverter(postConverter)
     console.log("CHECK")
     setDoc(postRef, post)
+    console.log("CHECK2")
     const userRef = doc(getFirestore(), COLLECTIONS.REGULAR_USERS, this.#uid)
     return updateDoc(userRef, {myPosts : arrayUnion(post.asDataObject())}).catch(err => {
         return setDoc(userRef, {myPosts : arrayUnion(post.asDataObject())})
     })
-  }
+}
+deletePost(post) {
+  const col = collection(getFirestore(), COLLECTIONS.AVAILABLE_OBJECTS)
+  const postRef = doc(col, post.getId()).withConverter(postConverter)
+  deleteDoc(postRef)
+  const userRef = doc(getFirestore(), COLLECTIONS.REGULAR_USERS, this.#uid)
+  return updateDoc(userRef, {myPosts : arrayRemove(post.asDataObject())}).catch(err => {
+      return setDoc(userRef, {myPosts : arrayRemove(post.asDataObject())})
+  })
+}
+
 }
