@@ -73,9 +73,13 @@ const MyItems = ({ navigation,route }) => {
   return (
     <View style={styles.home}>
       <Header header="My Objects" />
-      <TouchableOpacity
+      <TouchableOpacity 
         style={styles.arrowBackContainer}
-        onPress={() => navigation.goBack()}
+        onPress={() => {
+            console.log("Brrrr");
+            navigation.goBack()
+        }
+        }
       >
         <AntDesign style={styles.arrowBack} name="arrowleft" size={32} />
       </TouchableOpacity>
@@ -133,6 +137,7 @@ const styles = StyleSheet.create({
   arrowBackContainer: {
     position: "absolute",
     top: "5%",
+    zIndex: 1,
     left: 20,
   },
   arrowBack: {
