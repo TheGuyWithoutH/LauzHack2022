@@ -54,13 +54,13 @@ export default function App() {
               options={{ presentation: "card", headerShown: false }}
             />
             <Stack.Screen
-              name="Chat"
-              component={Chat}
+              name="MyItems"
+              component={MyItems}
               options={{ presentation: "card", headerShown: false }}
             />
             <Stack.Screen
-              name="MyItems"
-              component={MyItems}
+              name="Chat"
+              component={Chat}
               options={{ presentation: "card", headerShown: false }}
             />
           </Stack.Navigator>

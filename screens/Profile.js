@@ -5,7 +5,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { Text, View, TouchableOpacity, StyleSheet, Image } from "react-native";
 import Header from "../components/Header";
 import { UserContext } from "../context";
-import MyItems from "./MyItems";
+
 
 
 const Profile = ({ navigation }) => {
