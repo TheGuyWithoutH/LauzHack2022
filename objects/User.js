@@ -153,31 +153,59 @@ export class User extends AbstractUser {
             console.log("Error getting document remove:", error);
         }
         );
-  }
-
-  getMessageFromChat(chatId, setMessages) {
-    const collectionRef = collection(getFirestore(), COLLECTIONS.CHATS, chatId);
-    const query = query(collectionRef, orderBy("createdAt", "desc"));
-
-    const unsubscribe = onSnapshot(query, (querySnapshot) => {
-      setMessages(
-        querySnapshot.docs.map((doc) => ({
-          id: doc.id,
-          createdAt: doc.data().createdAt,
-          text: doc.data().text,
-          user: doc.data().user,
-        }))
-      )
-    })
-    return unsubscribe;
-  }
-
+      }
+        getMessageFromChat(chatId, setMessages) {
+          const collectionRef = collection(getFirestore(), COLLECTIONS.CHATS, chatId);
+          const query = query(collectionRef, orderBy("createdAt", "desc"));
+      
+          const unsubscribe = onSnapshot(query, (querySnapshot) => {
+            setMessages(
+              querySnapshot.docs.map((doc) => ({
+                id: doc.id,
+                createdAt: doc.data().createdAt,
+                text: doc.data().text,
+                user: doc.data().user,
+              }))
+            )
+          })
+          return unsubscribe;
+        }
+        
   sendMessageToChat(chatId, setMessages, messages) {
     setMessages(previousMessages => GiftedChat.append(previousMessages, messages));
     const collectionRef = collection(getFirestore(), COLLECTIONS.CHATS, chatId);
     const message = messages[0];
 
     addDoc(collectionRef, message);
+  }
+
+
+  getMyItems() {
+    return getDoc(doc(getFirestore(), COLLECTIONS.REGULAR_USERS, this.#uid)).then(
+        (docc) => {
+            if (docc.exists()) {
+                // get the data as a string
+                console.log(docc.data().myPosts);
+                return docc.data().myPosts;
+            } else {
+            console.log("No such document!");
+            }
+        }
+        );
+  }
+
+  getName() {
+    return getDoc(doc(getFirestore(), COLLECTIONS.REGULAR_USERS, this.#uid)).then(
+        (docc) => {
+            if (docc.exists()) {
+                // get the data as a string
+                console.log(docc.data().firstName+" "+docc.data().lastName);
+                return docc.data().firstName+" "+docc.data().lastName;
+            } else {
+            console.log("No such document!");
+            }
+        }
+        );
   }
 
 

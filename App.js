@@ -7,6 +7,7 @@ import { useFonts } from "expo-font";
 import { UserContext } from "./context";
 import { Guest } from "./objects/Guest";
 import Item from "./screens/Item";
+import MyItems from "./screens/MyItems";
 
 import LoginMenu from "./screens/LoginMenu";
 import SignUp from "./screens/SignUp";
@@ -50,6 +51,11 @@ export default function App() {
             <Stack.Screen
               name="Item"
               component={Item}
+              options={{ presentation: "card", headerShown: false }}
+            />
+            <Stack.Screen
+              name="MyItems"
+              component={MyItems}
               options={{ presentation: "card", headerShown: false }}
             />
             <Stack.Screen

@@ -1,12 +1,38 @@
 // The profile screen contains the user's profile information and allows them to edit it.
 // It also contains buttons to the user's items, manage his account, report a user, legal mentions, and logout.
 
-import React from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Text, View, TouchableOpacity, StyleSheet, Image } from "react-native";
 import Header from "../components/Header";
+import { UserContext } from "../context";
+
 
 
 const Profile = ({ navigation }) => {
+    const { user, setUser } = useContext(UserContext);
+    const [ name, setName ] = useState("");
+
+    useEffect(
+        () => {
+          if (user.isLoggedIn()) {
+            user.getName().then((name) => {
+                setName(name);
+            });
+            
+            
+
+
+            } else {
+                navigation.navigate("LoginMenu");
+            //console.log("isFavoooos", user.isFavorite(id));
+    
+            //setIsFav(user.isFavorite(id));
+          }
+        },
+        //setIsFav(user.isFavorite(id))
+        []
+      );
+
   return (
     <View style={styles.account}>
       <Header header={"My account"} />
@@ -14,7 +40,7 @@ const Profile = ({ navigation }) => {
         <View style={styles.topContainer}>
           <Image source={require("../assets/profile.png")} style={styles.profilePicture}/>
           <View style={{flex: 1, alignItems: 'center', flexDirection:'column'}}>
-            <Text style={styles.name}>John Doe</Text>
+            <Text style={styles.name}>{name}</Text>
             <TouchableOpacity onPress={() => navigation.navigate("Login")}>
               <Text style={styles.logout}>Logout</Text>
             </TouchableOpacity>
@@ -23,7 +49,7 @@ const Profile = ({ navigation }) => {
         <View style={styles.buttonContainer}>
           <TouchableOpacity
             style={styles.button}
-            onPress={() => navigation.navigate("Items")}
+            onPress={() => navigation.navigate("MyItems", {myName: name})}
           >
             <Text style={styles.buttonText}>My Objects</Text>
           </TouchableOpacity>
@@ -85,7 +111,7 @@ const styles = StyleSheet.create({
     height: 100,
   },
   name: {
-    fontSize: 30,
+    fontSize: 28,
     fontWeight: "bold",
     borderColor: "#F000FF",
   },
