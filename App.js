@@ -2,7 +2,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { StatusBar } from "expo-status-bar";
 import { useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { Platform, StyleSheet, Text, View } from "react-native";
 import { useFonts } from "expo-font";
 import { UserContext } from "./context";
 import { Guest } from "./objects/Guest";
@@ -11,6 +11,7 @@ import Item from "./screens/Item";
 import LoginMenu from "./screens/LoginMenu";
 import SignUp from "./screens/SignUp";
 import AppTabs from "./screens/AppTabs";
+import Chat from "./screens/Chat";
 
 export default function App() {
   const [fontsLoaded] = useFonts({
@@ -25,7 +26,7 @@ export default function App() {
   } else {
     return (
       <NavigationContainer>
-        <StatusBar style="auto" />
+        <StatusBar style="auto" hidden={Platform.OS === 'ios' ? true : false}/>
         <UserContext.Provider value={{ user, setUser }}>
           <Stack.Navigator screenOptions={{ headerShown: false }}>
             <Stack.Screen name="App" component={AppTabs} />
@@ -49,6 +50,11 @@ export default function App() {
             <Stack.Screen
               name="Item"
               component={Item}
+              options={{ presentation: "card", headerShown: false }}
+            />
+            <Stack.Screen
+              name="Chat"
+              component={Chat}
               options={{ presentation: "card", headerShown: false }}
             />
           </Stack.Navigator>

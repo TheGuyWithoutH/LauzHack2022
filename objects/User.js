@@ -10,9 +10,10 @@ import {
   updatePassword,
   updateProfile,
 } from "firebase/auth";
-import { setDoc, getDoc, doc, getFirestore } from "firebase/firestore";
+import { setDoc, getDoc, doc, getFirestore, collection } from "firebase/firestore";
 import { COLLECTIONS } from "../Constants";
 import { AbstractUser } from "./AbstractUser";
+import {GiftedChat} from 'react-native-gifted-chat'
 
 export class User extends AbstractUser {
   #uid;
@@ -152,10 +153,33 @@ export class User extends AbstractUser {
             console.log("Error getting document remove:", error);
         }
         );
-
-
-
   }
+
+  getMessageFromChat(chatId, setMessages) {
+    const collectionRef = collection(getFirestore(), COLLECTIONS.CHATS, chatId);
+    const query = query(collectionRef, orderBy("createdAt", "desc"));
+
+    const unsubscribe = onSnapshot(query, (querySnapshot) => {
+      setMessages(
+        querySnapshot.docs.map((doc) => ({
+          id: doc.id,
+          createdAt: doc.data().createdAt,
+          text: doc.data().text,
+          user: doc.data().user,
+        }))
+      )
+    })
+    return unsubscribe;
+  }
+
+  sendMessageToChat(chatId, setMessages, messages) {
+    setMessages(previousMessages => GiftedChat.append(previousMessages, messages));
+    const collectionRef = collection(getFirestore(), COLLECTIONS.CHATS, chatId);
+    const message = messages[0];
+
+    addDoc(collectionRef, message);
+  }
+
 
   post(post) {
     const col = collection(getFirestore(), COLLECTIONS.AVAILABLE_OBJECTS)
@@ -166,5 +190,5 @@ export class User extends AbstractUser {
     return updateDoc(userRef, {myPosts : arrayUnion(post.asDataObject())}).catch(err => {
         return setDoc(userRef, {myPosts : arrayUnion(post.asDataObject())})
     })
-}
+  }
 }
