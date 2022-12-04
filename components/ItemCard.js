@@ -8,9 +8,17 @@ const ItemCard = ({
   itemAvailability,
   action,
 }) => {
+
+  const dateToString = (date) => {
+    var day = date.getDate()
+    var month = date.getMonth() + 1; //Current Month
+    var year = date.getFullYear(); //Current Year
+    return year + '-' + month + '-' + day
+  }
+
   return (
     <TouchableOpacity style={styles.item} onPress={action}>
-      <Image style={styles.itemImage} source={{uri : itemImage}} />
+      <Image style={styles.itemImage} source={itemImage} />
       <View style={styles.itemInfos}>
         <Text style={styles.itemName}>{itemName}</Text>
         <Text style={styles.itemPrice}>
@@ -18,7 +26,7 @@ const ItemCard = ({
           <Text style={{ fontSize: 32 }}>{itemPrice}.-</Text>
         </Text>
         <Text style={styles.itemAvailability}>
-          Next availability : {itemAvailability}
+          Next availability : {itemAvailability === "Now" ? "Now" : dateToString(itemAvailability)}
         </Text>
       </View>
     </TouchableOpacity>
