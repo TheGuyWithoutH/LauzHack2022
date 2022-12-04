@@ -10,10 +10,11 @@ import {
   updatePassword,
   updateProfile,
 } from "firebase/auth";
-import { setDoc, getDoc, doc, getFirestore, collection } from "firebase/firestore";
+import { setDoc, getDoc, doc, getFirestore, collection, updateDoc, arrayUnion } from "firebase/firestore";
 import { COLLECTIONS } from "../Constants";
 import { AbstractUser } from "./AbstractUser";
 import {GiftedChat} from 'react-native-gifted-chat'
+import { postConverter } from "./Post";
 
 export class User extends AbstractUser {
   #uid;

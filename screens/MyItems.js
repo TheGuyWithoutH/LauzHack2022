@@ -61,7 +61,10 @@ const MyItems = ({ navigation,route }) => {
             console.log("Items: ",items)
         
             
-        });
+        }).catch((err) => {
+            console.log("err:",err)
+        }
+        )
     }
 }, []);
     
