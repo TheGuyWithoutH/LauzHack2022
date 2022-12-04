@@ -1,7 +1,7 @@
 export const COLLECTIONS = {
     // AVAILABLE_VISITS: "posts/notVisited/coutries",
-    AVAILABLE_VISITS: "posts/notVisited/posts",
-    FINISHED_VISITS: "posts/visited/countries",
+    AVAILABLE_OBJECTS: "posts/notRented/objects",
+    RENTED_OBJECTS: "posts/rented/objects",
     REGULAR_USERS: "users/regular/users",
     ADMIN_USERS: "users/admin/users",
     USER_CHAT: (chatId) => `chats/${chatId}/messages`,

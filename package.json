@@ -25,7 +25,8 @@
     "react-native-gifted-chat": "^1.0.4",
     "react-native-image-picker": "^4.10.2",
     "react-native-keyboard-aware-scroll-view": "^0.9.5",
-    "react-native-material-dropdown": "^0.11.1"
+    "react-native-material-dropdown": "^0.11.1",
+    "uuid": "^9.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9"
