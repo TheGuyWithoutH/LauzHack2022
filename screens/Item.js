@@ -9,6 +9,8 @@ import { StatusBar } from "expo-status-bar";
 import { AntDesign } from "@expo/vector-icons";
 import { UserContext } from "../context";
 
+import ValidateRent from "../components/ValidateRent";
+
 const styles = StyleSheet.create({
   container: {
     //paddingTop: 50,
@@ -33,7 +35,6 @@ const styles = StyleSheet.create({
     //borderWidth : 1,
     justifyContent: "space-between",
     width: "100%",
-    alignSelf: "center",
     borderColor: "#F000FF",
   },
 
@@ -42,7 +43,6 @@ const styles = StyleSheet.create({
     fontSize: 19,
     //borderWidth : 1,
     fontWeight: "normal",
-    alignSelf: "left",
   },
   innerB: {
     bottom: 0,
@@ -50,7 +50,6 @@ const styles = StyleSheet.create({
     fontSize: 18,
     //borderWidth : 1,
     fontWeight: "lighter",
-    alignSelf: "right",
   },
 
   actionContainer: {
@@ -78,7 +77,6 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     //borderWidth : 1,
     borderColor: "#F000FF",
-    alignSelf: "center",
     marginBottom: 10,
   },
 
@@ -100,7 +98,6 @@ const styles = StyleSheet.create({
     marginTop: 10,
     marginLeft: 0,
     width: "100%",
-    alignSelf: "left",
 
     fontSize: 16,
     //borderWidth : 1,
@@ -145,7 +142,6 @@ const styles = StyleSheet.create({
     left: "0%",
     flexDirection: "row",
     width: "100%",
-    alignSelf: "center",
     justifyContent: "space-between",
     //borderWidth : 1,
     borderColor: "#F000FF",
@@ -162,6 +158,7 @@ export default function Item({
 }) {
   const { user, setUser } = useContext(UserContext);
   const [isFav, setIsFav] = useState(false);
+  const [rent, setRent] = useState(false);
 
   useEffect(
     () => {
@@ -182,6 +179,7 @@ export default function Item({
   return (
     <View style={styles.container}>
       <StatusBar hidden={true} />
+      <ValidateRent id={id} visibility={rent} setVisibility={setRent}/>
       <View style={styles.actionContainer}>
         <TouchableOpacity
           style={styles.arrowBackContainer}
@@ -248,7 +246,8 @@ export default function Item({
             onPress={() => {
               //console.log("FAV?", isFav);
 
-              isMine===true ?  console.log("delete")  : navigation.navigate("Rent", { id: id })
+              isMine===true ?  console.log("delete") : setRent(true); 
+
 
             }}
           >
