@@ -9,7 +9,7 @@ const Header = ({logo, header}) => {
         return (
             <View style={styles.header}>
                 <Image style={styles.logo} source={logoImage} />
-                <Image source={illustration} />
+                <Image style={styles.illustration} source={illustration} />
             </View>
         ); 
     } else {
@@ -53,6 +53,8 @@ const styles = StyleSheet.create({
     },
     illustration: {
         zIndex: -1,
+        width: 250,
+        height: 250,
     }
 
 });

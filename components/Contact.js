@@ -1,12 +1,12 @@
 import React from 'react';
 import { View, Text, Image, TextInput, Button, StyleSheet, TouchableOpacity, FlatList } from 'react-native';
 
-const Contact = ({navigation, id, photo, name, lastMessage, lastViewed}) => {
+const Contact = ({navigation, id, photo, name, lastMessage, lastViewed, chatId}) => {
     return (
         <TouchableOpacity 
             style={styles.contact}
             onPress={() => {
-                navigation.navigate('Chat', {contact: {id: id, name: name, photo: photo}});
+                navigation.navigate('Chat', {contact: {id: id, name: name, avatar: photo}, chatId: chatId});
             }}
         >
             <Image source={{uri: photo}} style={styles.contactPhoto} />
@@ -26,9 +26,9 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'flex-start',
-        width: '80%',
+        width: '100%',
         paddingHorizontal: "10%",
-        height: 80,
+        height: 100,
     },
     contactPhoto: {
         flex: 1,
