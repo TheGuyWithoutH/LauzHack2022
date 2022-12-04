@@ -20,19 +20,46 @@ import ItemCard from "../components/ItemCard";
 import Item from "../screens/Item";
 import { useIsFocused } from "@react-navigation/native";
 
+import { where, limit } from "firebase/firestore";
+
 const Home = ({ navigation }) => {
   const { user, setUser } = useContext(UserContext);
   const [items2, setItems2] = useState([]);
+  const [page, setPage] = useState(0);
+  const [searchText, setSearchText] = useState("");
   const isFocused = useIsFocused();
-
+  
   const [isEssentials, setIsEssentials] = useState(false);
+  
+  const research = (searchTerm, page) => {
+    console.log(searchTerm);
+    searchTerm = searchTerm.toLowerCase();
+    let strlength = searchTerm.length;
+    let strFrontCode = searchTerm.slice(0, strlength-1);
+    let strEndCode = searchTerm.slice(strlength-1, searchTerm.length);
+    // This is an important bit..
+    let endCode = strFrontCode + String.fromCharCode(strEndCode.charCodeAt(0) + 1);
+
+    return user.getPublicPosts(where('fieldName', '>=', searchTerm), where('fieldName', '<', endCode), limit(50))
+  }
+
+  const computeAvailability = (items) => {
+    if (items.length == 0) {
+      return "Now";
+    }
+    let dates = Object.entries(items).filter((item) => Date.parse(item[0]) >= Date.now()).sort((a, b) => a[0].localeCompare(b[0]));
+    let date = Date.now();
+    while(Date.parse(dates[0]) <= date) {
+      if(date = Date.parse(dates[0])) dates = dates.shift();
+      date = date + 86400000;
+    }
+    return new Date(date);
+  }
 
   useEffect(() => {
     user.getPublicPosts().then((posts) => {
       setItems2(posts);
     })
-
-
   }, [isFocused]);
 
   
@@ -53,13 +80,14 @@ const Home = ({ navigation }) => {
     });
   }, []);
 
+
   return (
     <View style={styles.home}>
       <Header logo={true} />
       <View style={styles.content}>
         <View style={styles.searchDiv}>
-          <TextInput style={styles.textSearch} placeholder="Search an object"></TextInput>
-          <TouchableOpacity style={styles.buttonSearch}>
+          <TextInput style={styles.textSearch} placeholder="Search an object" onChangeText={newText => setSearchText(newText)} defaultValue={searchText}></TextInput>
+          <TouchableOpacity style={styles.buttonSearch} onPress={(_) => {research(searchText, 0)}}>
             <Fontisto name="search" size={24} color="white" />
           </TouchableOpacity>
         </View>
@@ -79,20 +107,25 @@ const Home = ({ navigation }) => {
             data={items2}
             renderItem={({ item }) => (
                 
-                <ItemCard itemImage={item.data().information.image[0].uri} itemName={item.data().information.name} itemAvailability={item.data().availability} itemPrice={item.data().information.price} action={() => {
+                <ItemCard itemImage={item.data().information.image[0]} itemName={item.data().information.name} itemAvailability={computeAvailability(item.data().nonAvailability)} itemPrice={item.data().information.price} action={() => {
                     navigation.navigate("Item", {item: {
                       image : item.data().information.image[0].uri,
                       name : item.data().information.name,
                       description : item.data().description,
-                      nextAvailability : item.data().availability,
+                      availability : item.data().nonAvailability,
                       price : item.data().information.price,
                       id: item.data().id,
                       owner: item.data().creatorName,
+                      ownerId: item.data().creatorUID,
                     }}) 
                 }
                 }/>
             )}
             showsVerticalScrollIndicator={false}
+            onEndReached={() => {
+              setItems2([...items2, ...research(searchText, page + 1)]);
+              setPage(page + 1);
+            }}
         />
       </View>
     </View>
