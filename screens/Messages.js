@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Text, Image, TextInput, Button, StyleSheet, TouchableOpacity, FlatList } from 'react-native';
 import Contact from '../components/Contact';
 import Header from '../components/Header';
+import ValidateRent from '../components/ValidateRent';
 
 const ItemDivider = () => {
     return (
@@ -38,6 +39,7 @@ const Messages = () => {
     return (
         <View style={styles.messages}>
             <Header header={"Messages"} />
+            <ValidateRent/>
             <View style={styles.content}>
                 <FlatList 
                     data={contacts} 
