@@ -246,12 +246,12 @@ export default function Item({
             onPress={() => {
               //console.log("FAV?", isFav);
 
-              isMine===true ?  console.log("delete") : setRent(true); 
+              isMine ?  console.log("delete") : setRent(true); 
 
 
             }}
           >
-            <Text style={styles.buttonText}>{isMine===false ? "Rent this object" : "Delete" }</Text>
+            <Text style={styles.buttonText}>{isMine ? "Rent this object" : "Delete" }</Text>
           </TouchableOpacity>
         </View>
       </View>
