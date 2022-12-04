@@ -157,6 +157,35 @@ export class User extends AbstractUser {
 
   }
 
+  getMyItems() {
+    return getDoc(doc(getFirestore(), COLLECTIONS.REGULAR_USERS, this.#uid)).then(
+        (docc) => {
+            if (docc.exists()) {
+                // get the data as a string
+                console.log(docc.data().myPosts);
+                return docc.data().myPosts;
+            } else {
+            console.log("No such document!");
+            }
+        }
+        );
+  }
+
+  getName() {
+    return getDoc(doc(getFirestore(), COLLECTIONS.REGULAR_USERS, this.#uid)).then(
+        (docc) => {
+            if (docc.exists()) {
+                // get the data as a string
+                console.log(docc.data().firstName+" "+docc.data().lastName);
+                return docc.data().firstName+" "+docc.data().lastName;
+            } else {
+            console.log("No such document!");
+            }
+        }
+        );
+  }
+
+
   post(post) {
     const col = collection(getFirestore(), COLLECTIONS.AVAILABLE_OBJECTS)
     const postRef = doc(col, post.getId()).withConverter(postConverter)

@@ -156,7 +156,7 @@ export default function Item({
   navigation,
   route: {
     params: {
-      item: { image, name, description, nextAvailabitity, id, owner, price },
+      item: { image, name, description, nextAvailabitity, id, owner, price, isMine },
     },
   },
 }) {
@@ -248,10 +248,11 @@ export default function Item({
             onPress={() => {
               //console.log("FAV?", isFav);
 
-              navigation.navigate("Rent", { id: id })
+              isMine===true ?  console.log("delete")  : navigation.navigate("Rent", { id: id })
+
             }}
           >
-            <Text style={styles.buttonText}>Rent this object</Text>
+            <Text style={styles.buttonText}>{isMine===false ? "Rent this object" : "Delete" }</Text>
           </TouchableOpacity>
         </View>
       </View>
