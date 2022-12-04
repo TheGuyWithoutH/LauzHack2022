@@ -1,39 +1,65 @@
+import { useIsFocused } from "@react-navigation/native";
+import { where } from "firebase/firestore";
 import React, { useState, useContext, useEffect } from "react";
 import { StyleSheet, Text, View, SafeAreaView, FlatList } from 'react-native';
 import Header from '../components/Header';
+import ItemCard from "../components/ItemCard";
 import { UserContext } from "../context";
 
 
 
 
-const Favorites = () => {
+const Favorites = ({navigation}) => {
     const { user, setUser } = useContext(UserContext);
+    const isFocused = useIsFocused();
+
 
     const [items,setItems] = useState([])
     useEffect(() => {
+        console.log("Favorites");
         user.getFavorites().then((res) => {
-            console.log(res)
+            console.log("res",res)
+            if (res.length === 0) {
+                setItems([])
+            } else {
+            user.getPublicPosts(where("id","in",res)).then((posts) => {
+                console.log("posts",posts)
+                setItems(posts)
+            
+            })
+        }
+        }).catch((err) => {
+            console.log("Error:",err)
         })   
-    }, []);
+    }, [isFocused]);
 
 
     return (
         <View style={styles.favorites}>
             <Header header={"Favorites"} />
             <View style={styles.content}>
-                <FlatList></FlatList>
-            </View>
-
-            <FlatList
+                   <FlatList
             data={items}
-            renderItem={({ item }) => (
+            renderItem={({ item }) => {
+                console.log("item",item.data().information)
+                return(
                 
-                <ItemCard itemImage={item.image} itemName={item.name} itemAvailability={item.nextAvailabitity} itemPrice={item.price} action={() => {
-                    navigation.navigate("Item", {item: item}) 
+                <ItemCard itemImage={item.data().information.image[0]} itemName={item.data().information.name} itemAvailability={item.data().availability} itemPrice={item.data().information.price} action={() => {
+                    navigation.navigate("Item", {item: {
+                      image : item.data().information.image[0],
+                      name : item.data().information.name,
+                      description : item.data().description,
+                      nextAvailability : item.data().availability,
+                      price : item.data().information.price,
+                      id: item.data().id,
+                      owner: item.data().creatorName,
+                    }}) 
                 }
                 }/>
-            )}
+            )}}
+            showsVerticalScrollIndicator={false}
         />
+        </View>
         </View>
 
     );

@@ -57,6 +57,7 @@ const ValidateRent = ({navigation, id, visibility, setVisibility, availability, 
 
         user.rentItem(id, newDatesTaken).then(() => {
             user.createChat(id, dateInterval.startDate, dateInterval.endDate).then((idChat) => {
+                setCalendarModalVisible(false);
                 navigation.navigate('Chat', {contact: {id: ownerId, name: ownerName}, chatId: idChat});
             });
         });

@@ -65,15 +65,15 @@ export default function LoginMenu({navigation}){
     }
 
     return (
-        <View>
-            <View>
+        <View style={{backgroundColor: "#F6FFFB", height: "100%", width:"100%", alignItems: 'center'}}>
+            <View style={{marginTop: 30, width:"80%"}}>
                 <View style={styles.componentStyle}>
                     {/* <TextInput placeholder="firstName" value={userState.firstName} style={{marginLeft:10,fontSize:17}} onChangeText={text => setFirstName(text)}></TextInput> */}
                     <TextInput placeholder="Adresse email" value={userState.email} style={styles.text} onChangeText={text => setEmail(text)} autoCapitalize="none" autoCorrect={false} onChange={() => {setIsLoggingIn(false);setIsWrongPassword(false) }} autoComplete="email" keyboardType="email-address" textContentType="emailAddress"></TextInput>
                 </View>
                 {isLoggingIn && 
                 <View style={styles.componentStyle}>
-                    <TextInput placeholder="password" value={userState.password} style={{marginLeft:10,fontSize:17}} onChangeText={text => setPassword(text)} autoCapitalize="none" autoCorrect={false}></TextInput>
+                    <TextInput placeholder="password" value={userState.password} style={{marginLeft:10,fontSize:17, color:"4BAD80"}} onChangeText={text => setPassword(text)} autoCapitalize="none" autoCorrect={false}></TextInput>
                     {isWrongPassword && <Text style={{color:"red", fontSize:10}}>Wrong Password</Text>}
                 </View>}
                 <TouchableOpacity style={[styles.componentStyle,{backgroundColor: userState.email.length == 0 ? "#c4c4c4" : "#FFCB66",}]}
@@ -84,8 +84,8 @@ export default function LoginMenu({navigation}){
                 </TouchableOpacity>
                 
             </View>
-            <View style={{marginTop:50,}}>
-                    <Text>
+            <View style={{marginTop:50, width: "80%"}}>
+                    <Text style={{color: '#4BAD80', fontSize: 25}}>
                         Continue with : 
                     </Text>
                 <View style={styles.componentStyle}>  
