@@ -251,7 +251,7 @@ export default function Item({
 
             }}
           >
-            <Text style={styles.buttonText}>{isMine ? "Rent this object" : "Delete" }</Text>
+            <Text style={styles.buttonText}>{!isMine ? "Rent this object" : "Delete" }</Text>
           </TouchableOpacity>
         </View>
       </View>
