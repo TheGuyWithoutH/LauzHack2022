@@ -11,7 +11,6 @@ import {
   FlatList,
   Animated,
 } from "react-native";
-import { Swipeable } from "react-native-gesture-handler";
 import { UserContext } from "../context";
 import { auth } from "../firebase";
 import { Guest } from "../objects/Guest";
