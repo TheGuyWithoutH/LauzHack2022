@@ -86,7 +86,7 @@ const MyItems = ({ navigation,route }) => {
             console.log("------------------"),
             console.log("item: ",item),
             <ItemCard
-              itemImage={item.image.uri}
+              itemImage={item.image}
               itemName={item.name}
               itemAvailability={item.nextAvailabitity}
               itemPrice={item.price}

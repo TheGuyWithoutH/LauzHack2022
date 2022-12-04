@@ -120,8 +120,14 @@ const Home = ({ navigation }) => {
                     }}) 
                 }
                 }/>
-            )}
+            )}   
+
             showsVerticalScrollIndicator={false}
+            onEndReached={() => {
+              
+              setItems2(...items2.concat(research(searchText, page + 1)));
+              setPage(page + 1);
+            }}
         />
       </View>
     </View>
