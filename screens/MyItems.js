@@ -57,6 +57,7 @@ const MyItems = ({ navigation,route }) => {
                })
                console.log("Temp:",temp)
                 setItems(temp)
+                
             }
             console.log("Items: ",items)
         
@@ -79,14 +80,24 @@ const MyItems = ({ navigation,route }) => {
         <FlatList
           data={items}
           renderItem={({ item }) => (
+            console.log("------------------"),
+            console.log("item: ",item),
             <ItemCard
-              itemImage={item.image}
+              itemImage={item.image.uri}
               itemName={item.name}
               itemAvailability={item.nextAvailabitity}
               itemPrice={item.price}
               isMine={true}
               action={() => {
-                navigation.navigate("Item", { item: item, isMine: true });
+                navigation.navigate("Item", { item: {item: {
+                      image : item.image,
+                      name : item.name,
+                      description : item.description,
+                      nextAvailability : item.availability,
+                      price : item.price,
+                      id: item.id,
+                      owner: item.creatorName,
+                    }}, isMine: true });
               }}
             />
           )}
