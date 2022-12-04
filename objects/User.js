@@ -10,7 +10,7 @@ import {
   updatePassword,
   updateProfile,
 } from "firebase/auth";
-import { setDoc, getDoc, doc, getFirestore, collection } from "firebase/firestore";
+import { setDoc, getDoc, doc, getFirestore, collection, orderBy, query, onSnapshot, addDoc } from "firebase/firestore";
 import { COLLECTIONS } from "../Constants";
 import { AbstractUser } from "./AbstractUser";
 import {GiftedChat} from 'react-native-gifted-chat'
@@ -50,18 +50,22 @@ export class User extends AbstractUser {
     return signOut(getAuth());
   }
 
+  getUserInformation(uid) {
+    return getDoc(doc(getFirestore(), COLLECTIONS.REGULAR_USERS, uid)).then(
+      (doc) => {
+          if (doc.exists()) {
+              // get the data as a string        
+              return doc.data();
+          } else {
+          //console.log("No such document!");
+          }
+      }
+      );
+  }
+
   getPersonalInformation() {
     console.log(this.#uid);
-    return getDoc(doc(getFirestore(), COLLECTIONS.REGULAR_USERS, this.#uid)).then(
-        (doc) => {
-            if (doc.exists()) {
-                // get the data as a string        
-                return doc.data();
-            } else {
-            //console.log("No such document!");
-            }
-        }
-        );
+    return this.getUserInformation(this.#uid);
   }
 
   getFavorites() {
@@ -155,14 +159,29 @@ export class User extends AbstractUser {
         );
   }
 
-  getMessageFromChat(chatId, setMessages) {
-    const collectionRef = collection(getFirestore(), COLLECTIONS.CHATS, chatId);
-    const query = query(collectionRef, orderBy("createdAt", "desc"));
+  getChats() {
+    return getDoc(doc(getFirestore(), COLLECTIONS.REGULAR_USERS, this.#uid)).then(
+        (doc) => {
+            if (doc.exists()) {
+                // get the data as a string
+                var chats = doc.data().myChats;
+                return chats;
+            } else {
+            console.log("No such document!");
+            return []
+            }
+        }
+        );
+  }
 
-    const unsubscribe = onSnapshot(query, (querySnapshot) => {
+  getMessageFromChat(chatId, setMessages) {
+    const collectionRef = collection(getFirestore(), COLLECTIONS.USER_CHAT(chatId));
+    const queryPrepare = query(collectionRef, orderBy("createdAt", "desc"));
+
+    const unsubscribe = onSnapshot(queryPrepare, (querySnapshot) => {
       setMessages(
         querySnapshot.docs.map((doc) => ({
-          id: doc.id,
+          id: doc.data()._id,
           createdAt: doc.data().createdAt,
           text: doc.data().text,
           user: doc.data().user,
@@ -174,7 +193,7 @@ export class User extends AbstractUser {
 
   sendMessageToChat(chatId, setMessages, messages) {
     setMessages(previousMessages => GiftedChat.append(previousMessages, messages));
-    const collectionRef = collection(getFirestore(), COLLECTIONS.CHATS, chatId);
+    const collectionRef = collection(getFirestore(), COLLECTIONS.USER_CHAT(chatId));
     const message = messages[0];
 
     addDoc(collectionRef, message);

@@ -1,60 +1,50 @@
 import React, { useState } from 'react';
-import { Modal, Text, View, StyleSheet, TouchableOpacity, TextInput } from 'react-native';
+import { Modal, Text, View, StyleSheet, TouchableOpacity, TextInput, Alert } from 'react-native';
 import {Calendar} from 'react-native-calendars';
 
 import { Ionicons } from '@expo/vector-icons'; 
 
-const ValidateRent = ({navigation, id, visibility, setVisibility }) => {
+const ValidateRent = ({navigation, id, visibility, setVisibility, availability }) => {
     const [calendarModalVisible, setCalendarModalVisible] = useState(false);
 
     const [dateInterval, setDateInterval] = useState({});
 
-    const [datesTaken, setDatesTaken] = useState([
-        {
-            date: '2022-12-10',
-            status: 'taken',
-        },
-        {
-            date: '2022-12-11',
-            status: 'taken',
-        },
-        {
-            date: '2022-12-12',
-            status: 'taken',
-        },
-        {
-            date: '2022-12-13',
-            status: 'wanted',
-        },
-    ]);
+    const [datesTaken, setDatesTaken] = useState({
+            '2022-12-10': 'taken',
+            '2022-12-11': 'taken',
+            '2022-12-12': 'taken',
+            '2022-12-13': 'wanted',
+        });
 
-    const addDate = (idx, date, datesTaken) => {
-        let newDatesTaken = [...datesTaken];
+    const addDate = (date, datesTaken) => {
+        let newDatesTaken = {...datesTaken, [date]: 'wanted'};
+        let update = true;
 
-        if(idx < 0) {
-            newDatesTaken.push({date: date, status: 'wanted'});
-        } else {
-            newDatesTaken[idx].status = 'wanted';
-        }
-
-        const dates = newDatesTaken.filter((item) => item.status === 'wanted').sort((a, b) => a.date.localeCompare(b.date))
+        const dates = Object.entries(newDatesTaken).filter((item) => item[1] === 'wanted').sort((a, b) => a[0].localeCompare(b[0]))
 
         if(dates.length > 5) {
-            alert('You can only select 5 dates');
-            return;
+            Alert.alert("Too much days selected", 'You can only select 5 days at most');
+            update = false;
         }
 
-        console.log(datesTaken);
         dates.forEach((item, index) => {
             //If previous date is not the day before the current date
-            if(index > 0 && new Date(item.date) > new Date((new Date(dates[index - 1].date)).getDate() + 1) ) {
-                alert('You can only select 5 consecutive dates');
-                return;
+            var d1 = Date.parse(item[0]);
+            var d2 = Date.parse(dates[index - 1]?.[0]) + 86400000;
+            if(index > 0 && d2 !== d1) {
+                Alert.alert("Invalid date range", 'You can only select consecutive dates');
+                update = false;
             }
         });
 
-        setDatesTaken(newDatesTaken);
-        setDateInterval({startDate: dates[0].date, endDate: dates[dates.length - 1].date});
+        if(update) {
+            setDatesTaken(newDatesTaken);
+            setDateInterval({startDate: dates[0][0], endDate: dates[dates.length - 1][0]});
+        }
+    }
+
+    const submitRent = () => {
+        
     }
 
     return (
@@ -71,7 +61,7 @@ const ValidateRent = ({navigation, id, visibility, setVisibility }) => {
                     <View style={{width: "90%"}}>
                         <Text style={styles.title}>Choose a date</Text>
                         <TouchableOpacity style={styles.calendarOpen} onPress={() => setCalendarModalVisible(true)}>
-                            <Text style={styles.openText}>__ - __ | __ - __</Text>
+                            <Text style={styles.openText}>{dateInterval ? dateInterval.startDate + " | " + dateInterval.endDate : "__ - __ | __ - __"}</Text>
                             <Ionicons name="ios-calendar" size={24} color="#4BAD80" />
                         </TouchableOpacity>
                         <Modal
@@ -84,29 +74,28 @@ const ValidateRent = ({navigation, id, visibility, setVisibility }) => {
                                     <Calendar
                                         theme={{calendarBackground:'#F6FFFB' }}
                                         onDayPress={day => {
-                                            const elem = datesTaken.indexOf({date: day.dateString});
-                                            if(elem === -1) {
-                                                addDate(-1, day.dateString, datesTaken);
+                                            if(!datesTaken[day.dateString]) {
+                                                addDate(day.dateString, datesTaken);
                                             } else {
-                                                if(datesTaken[elem].status != 'taken') {
-                                                    if(datesTaken[elem].status === 'wanted') {
-                                                        setDatesTaken(datesTaken.map(elem => elem.date === day.dateString ? {date: day.dateString, status: ''} : elem));
+                                                if(datesTaken[day.dateString] != 'taken') {
+                                                    if(datesTaken[day.dateString] === 'wanted') {
+                                                        setDatesTaken({...datesTaken, [day.dateString]: ''});
                                                     } else {
-                                                        addDate(elem, day.dateString, datesTaken);
+                                                        addDate(day.dateString, datesTaken);
                                                     }
                                                 }
                                             }
                                           }}
                                         style={styles.calendar}
                                         markingType={'period'}
-                                        markedDates={datesTaken.reduce(
+                                        markedDates={Object.entries(datesTaken).reduce(
                                             (obj, item) => {
-                                                if(item.status === 'taken') {
-                                                    return Object.assign(obj, { [item.date]: {
+                                                if(item[1] === 'taken') {
+                                                    return Object.assign(obj, { [item[0]]: {
                                                         textColor: '#CCCCCC',
                                                     }})
-                                                } else if (item.status === 'wanted') {
-                                                    return Object.assign(obj, { [item.date]: {
+                                                } else if (item[1] === 'wanted') {
+                                                    return Object.assign(obj, { [item[0]]: {
                                                         color: '#4BAD80',
                                                         textColor: '#FFFFFF',
                                                     }})
@@ -133,7 +122,7 @@ const ValidateRent = ({navigation, id, visibility, setVisibility }) => {
                             numberOfLines={5}
                         />
                     </View>
-                    <TouchableOpacity style={styles.confirm} >
+                    <TouchableOpacity style={styles.confirm} onPress={() => submitRent()} >
                         <Text style={styles.textConfirm}>Reserve the location</Text>
                     </TouchableOpacity>
                 </View>

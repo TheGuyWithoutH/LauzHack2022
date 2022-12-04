@@ -4,7 +4,7 @@ export const COLLECTIONS = {
     FINISHED_VISITS: "posts/visited/countries",
     REGULAR_USERS: "users/regular/users",
     ADMIN_USERS: "users/admin/users",
-    USER_CHAT: "chats",
+    USER_CHAT: (chatId) => `chats/${chatId}/messages`,
     users: (country, city) => `coutries/${country}/cities/${city}/users`,
     user: (country, city, uid) => `${COLLECTIONS.users(country, city)}/${uid}`,
 
