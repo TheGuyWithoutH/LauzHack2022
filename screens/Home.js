@@ -31,6 +31,7 @@ const Home = ({ navigation }) => {
     user.getPublicPosts().then((posts) => {
       setItems2(posts);
     })
+    console.log("firebase")
 
 
   }, [isFocused]);
@@ -79,9 +80,9 @@ const Home = ({ navigation }) => {
             data={items2}
             renderItem={({ item }) => (
                 
-                <ItemCard itemImage={item.data().information.image[0].uri} itemName={item.data().information.name} itemAvailability={item.data().availability} itemPrice={item.data().information.price} action={() => {
+                <ItemCard itemImage={item.data().information.image[0]} itemName={item.data().information.name} itemAvailability={item.data().availability} itemPrice={item.data().information.price} action={() => {
                     navigation.navigate("Item", {item: {
-                      image : item.data().information.image[0].uri,
+                      image : item.data().information.image[0],
                       name : item.data().information.name,
                       description : item.data().description,
                       nextAvailability : item.data().availability,

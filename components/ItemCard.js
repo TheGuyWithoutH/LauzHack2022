@@ -10,7 +10,7 @@ const ItemCard = ({
 }) => {
   return (
     <TouchableOpacity style={styles.item} onPress={action}>
-      <Image style={styles.itemImage} source={{uri : itemImage}} />
+      <Image style={styles.itemImage} source={{ uri: itemImage.uri }} />
       <View style={styles.itemInfos}>
         <Text style={styles.itemName}>{itemName}</Text>
         <Text style={styles.itemPrice}>
