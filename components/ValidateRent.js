@@ -4,7 +4,7 @@ import {Calendar} from 'react-native-calendars';
 
 import { Ionicons } from '@expo/vector-icons'; 
 
-const ValidateRent = ({navigation, id, }) => {
+const ValidateRent = ({navigation, id, visibility, setVisibility }) => {
     const [calendarModalVisible, setCalendarModalVisible] = useState(false);
 
     const [dateInterval, setDateInterval] = useState({});
@@ -61,9 +61,9 @@ const ValidateRent = ({navigation, id, }) => {
         <Modal
             animationType="slide"
             transparent={true}
-            visible={true}
+            visible={visibility}
             onRequestClose={() => {
-                setModalVisible(false);
+                setVisibility(false);
               }}
         >
             <View style={styles.center}>

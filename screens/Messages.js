@@ -18,7 +18,7 @@ const ItemDivider = () => {
     );
   }
 
-const Messages = () => {
+const Messages = ({navigation}) => {
     const contacts = [
         {
             id: 1,
@@ -39,11 +39,10 @@ const Messages = () => {
     return (
         <View style={styles.messages}>
             <Header header={"Messages"} />
-            <ValidateRent/>
             <View style={styles.content}>
                 <FlatList 
                     data={contacts} 
-                    renderItem={({item}) => (<Contact id={item.id} photo={item.photo} name={item.name} lastMessage={item.lastMessage} lastViewed={item.lastViewed}/>)}
+                    renderItem={({item}) => (<Contact navigation={navigation} id={item.id} photo={item.photo} name={item.name} lastMessage={item.lastMessage} lastViewed={item.lastViewed}/>)}
                     ItemSeparatorComponent={ItemDivider}
                     style={styles.contacts}
                 />

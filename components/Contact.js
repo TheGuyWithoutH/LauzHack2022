@@ -1,9 +1,14 @@
 import React from 'react';
 import { View, Text, Image, TextInput, Button, StyleSheet, TouchableOpacity, FlatList } from 'react-native';
 
-const Contact = ({id, photo, name, lastMessage, lastViewed}) => {
+const Contact = ({navigation, id, photo, name, lastMessage, lastViewed}) => {
     return (
-        <TouchableOpacity style={styles.contact}>
+        <TouchableOpacity 
+            style={styles.contact}
+            onPress={() => {
+                navigation.navigate('Chat', {contact: {id: id, name: name, photo: photo}});
+            }}
+        >
             <Image source={{uri: photo}} style={styles.contactPhoto} />
             <View style={styles.contactInfo}>
                 <Text style={styles.contactName}>{name}</Text>
