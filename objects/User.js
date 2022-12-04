@@ -10,10 +10,14 @@ import {
   updatePassword,
   updateProfile,
 } from "firebase/auth";
-import { setDoc, getDoc, doc, getFirestore, collection, orderBy, query, onSnapshot, addDoc } from "firebase/firestore";
 import { COLLECTIONS } from "../Constants";
 import { AbstractUser } from "./AbstractUser";
 import {GiftedChat} from 'react-native-gifted-chat'
+import { postConverter } from "./Post";
+
+import { setDoc, getDoc, doc, getFirestore, collection, updateDoc, arrayUnion, orderBy, query, onSnapshot, addDoc } from "firebase/firestore";
+
+
 
 export class User extends AbstractUser {
   #uid;
@@ -157,7 +161,7 @@ export class User extends AbstractUser {
             console.log("Error getting document remove:", error);
         }
         );
-  }
+    }
 
   getChats() {
     return getDoc(doc(getFirestore(), COLLECTIONS.REGULAR_USERS, this.#uid)).then(
@@ -199,15 +203,54 @@ export class User extends AbstractUser {
     addDoc(collectionRef, message);
   }
 
+getMyItems() {
+  return getDoc(doc(getFirestore(), COLLECTIONS.REGULAR_USERS, this.#uid)).then(
+      (docc) => {
+          if (docc.exists()) {
+              // get the data as a string
+              console.log(docc.data().myPosts);
+              return docc.data().myPosts;
+          } else {
+          console.log("No such document!");
+          }
+      }
+      );
+}
+
+getName() {
+  return getDoc(doc(getFirestore(), COLLECTIONS.REGULAR_USERS, this.#uid)).then(
+      (docc) => {
+          if (docc.exists()) {
+              // get the data as a string
+              console.log(docc.data().firstName+" "+docc.data().lastName);
+              return docc.data().firstName+" "+docc.data().lastName;
+          } else {
+          console.log("No such document!");
+          }
+      }
+      );
+}
+
 
   post(post) {
     const col = collection(getFirestore(), COLLECTIONS.AVAILABLE_OBJECTS)
     const postRef = doc(col, post.getId()).withConverter(postConverter)
     console.log("CHECK")
     setDoc(postRef, post)
+    console.log("CHECK2")
     const userRef = doc(getFirestore(), COLLECTIONS.REGULAR_USERS, this.#uid)
     return updateDoc(userRef, {myPosts : arrayUnion(post.asDataObject())}).catch(err => {
         return setDoc(userRef, {myPosts : arrayUnion(post.asDataObject())})
     })
-  }
+}
+deletePost(post) {
+  const col = collection(getFirestore(), COLLECTIONS.AVAILABLE_OBJECTS)
+  const postRef = doc(col, post.getId()).withConverter(postConverter)
+  deleteDoc(postRef)
+  const userRef = doc(getFirestore(), COLLECTIONS.REGULAR_USERS, this.#uid)
+  return updateDoc(userRef, {myPosts : arrayRemove(post.asDataObject())}).catch(err => {
+      return setDoc(userRef, {myPosts : arrayRemove(post.asDataObject())})
+  })
+}
+
 }
