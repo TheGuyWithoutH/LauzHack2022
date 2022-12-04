@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { View, Text, Image, TextInput, Button, StyleSheet, TouchableOpacity, FlatList } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Home from './Home';
@@ -9,9 +9,11 @@ import AddItem from './AddItem';
 
 import { Ionicons } from '@expo/vector-icons'; 
 import { AntDesign } from '@expo/vector-icons'; 
+import { UserContext } from '../context';
 
 const AppTabs = ({navigation}) => {
     const Tab = createBottomTabNavigator();
+    const { user, setUser } = useContext(UserContext);
 
     return (
         <Tab.Navigator tabBarOptions={{showLabel: false, inactiveTintColor: "#4BAD80",activeTintColor: "#4BAD80"}} screenOptions={{headerShown : false, tabBarStyle: { height: 78 },}}>
@@ -69,6 +71,7 @@ const AppTabs = ({navigation}) => {
                 
             />
         </Tab.Navigator>
+        
     );
 };
 

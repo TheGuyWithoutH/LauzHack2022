@@ -51,7 +51,7 @@ const Home = ({ navigation }) => {
       }
       unsuscribe();
     });
-  }, []);
+  }, [isFocused]);
 
   return (
     <View style={styles.home}>

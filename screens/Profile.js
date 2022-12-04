@@ -41,7 +41,7 @@ const Profile = ({ navigation }) => {
           <Image source={require("../assets/profile.png")} style={styles.profilePicture}/>
           <View style={{flex: 1, alignItems: 'center', flexDirection:'column'}}>
             <Text style={styles.name}>{name}</Text>
-            <TouchableOpacity onPress={() => navigation.navigate("Login")}>
+            <TouchableOpacity onPress={() => {user.logout();navigation.navigate("Home")}}>
               <Text style={styles.logout}>Logout</Text>
             </TouchableOpacity>
           </View>
